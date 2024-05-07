@@ -1,0 +1,13 @@
+@import url(...);
+
+* {
+    box-sizing: border-box;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: #777;
+    background-color: #e1ffff;
+}
+
+.main-container {
+    display: flex;
+}
+
