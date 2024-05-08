@@ -1,13 +1,158 @@
-@import url(...);
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 
 * {
     box-sizing: border-box;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    color: #777;
-    background-color: #e1ffff;
+    font-family: "Raleway", sans-serif;
+    font-size: 18px;
+    font-weight: normal;
+    color: black;
+}
+
+/**html, body {
+    margin: 1.5em;
+    padding: 0;
+}**/
+
+button {
+    border: black solid 2px;
+    font-weight: bold;
+}
+
+button:hover {
+    filter: brightness(110%);
+}
+
+button:active {
+    filter: brightness(100%);
 }
 
 .main-container {
     display: flex;
 }
 
+.left-block {
+    margin-left: 2em;
+    margin-right: 1.5em;
+}
+
+.right-block{
+    margin-right: 3em;
+    /**border-left: black solid 3px;**/
+    padding-left: 2em;
+}
+
+.main-title {
+    font-size: 40px;
+    padding: 0px;
+    margin: 0px;
+}
+
+.main-title::first-letter {
+    font-size: 60px;
+    font-weight: bolder;
+}
+
+.main-title:nth-child(1) {
+    margin-top: 3em;
+    padding-left: 20%;
+}
+
+.main-title:nth-child(2) {
+    margin-top: .3em;
+    padding-left: 30%;
+}
+
+/*
+.big-logo {
+    max-width: 100%;
+    height: auto;
+    width: auto\9;
+}*/
+
+.logout-btn {
+    font-size: 14px;
+    margin: 5em auto 3em 100%;
+    float: right;
+    padding: .2em .5em;
+    background-color: rgb(251, 132, 119);
+}
+
+.greet-message {
+    margin-bottom: 2em;
+}
+
+.greet, .user-to-greet {
+    font-size: 30px;
+}
+
+.user-to-greet {
+    margin-left: 3em;
+    font-weight: bold;
+    
+}
+
+.hr {
+    width: 50%;
+    border-top: 3px solid black;
+}
+
+.top-hr {
+    float: left;
+    margin-bottom: 2em;
+}
+
+.bottom-hr {
+    float: right;
+    margin-bottom: 1em;
+}
+
+.nav-btns {
+    display: inline-block;
+}
+
+.nav-btn {
+    font-size: 22px;
+    margin: .5em 50% .5em auto;
+    padding: .2em 1em;
+    border: solid 4px;
+}
+
+
+.nav-btn:nth-child(2) {
+    border-color: rgb(247, 163, 18);
+    background-color: rgb(254, 208, 129);
+}
+
+.nav-btn:nth-child(3) {
+    border-color: rgb(110, 252, 148);
+    background-color: rgb(179, 252, 198);
+    margin-left: 50%;
+    margin-right: auto;
+    float: right;
+}
+
+.nav-btn:nth-child(4) {
+    border-color: rgb(95, 159, 248);
+    background-color: rgb(153, 192, 245);
+}
+
+.about-btn {
+    font-size: 14px;
+    margin: 2em auto 3em 100%;
+    float: right;
+    padding: .2em .5em;
+    background-color: rgb(200, 199, 255);
+}
+
+.quote-txt {
+    margin-left: 5em;
+    border-left: black solid 2px;
+    border-right: black solid 2px;
+    padding: 0 .5em;
+    height: auto;
+}
+
+.quote-author {
+    text-align: right;
+    font-weight: bold;
+}
