@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+  </head>
+
+  <body>
+    <input id='a'>
+    <input id='b'>
+    <button onclick='addPython()'>Go</button>
+    <p id='c'></p>
+    <script>
+      // init Pyodide
+      async function main() {
+        let pyodide = await loadPyodide();
+        return pyodide;
+      }
+      let pyodideReadyPromise = main();
+
+      async function addPython(){
+        let pyodide = await pyodideReadyPromise;
+        try {
+          // in this array one can type Python
+          let output = pyodide.runPython(`
+          import js
+
+          X = js.document.getElementById('a').value
+          Y = js.document.getElementById('b').value
+          x = X.split()
+          y = Y.split()
+          for i in range(len(x)):
+            x[i] = float(x[i])
+            y[i] = float(y[i])
+          
+          cp = 0
+          sx = 0
+          sx2 = 0
+          sy = 0
+          for i in range(len(x)):
+            cp += x[i]*y[i]
+            sx += x[i]
+            sx2 += x[i]*x[i]
+            sy += y[i]
+          
+          a = (len(x)*cp-sx*sy)/(len(x)*sx2-sx*sx)
+          b = (sy/len(x))-a*(sx/len(x))
+          ans = str(a)+"x+"+str(b)
+          
+          js.document.getElementById('c').innerText = ans
+          `)
+        }
+        catch (err) {
+          console.log(err);
+        }
+      }
+    </script>
+  </body>
+</html>
