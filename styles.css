@@ -6,6 +6,7 @@
     font-size: 18px;
     font-weight: normal;
     color: black;
+    background-color: rgb(248, 255, 255);
 }
 
 /**html, body {
@@ -15,15 +16,17 @@
 
 button {
     border: black solid 2px;
+    border-radius: 20%;
     font-weight: bold;
+    transition: .2s;
 }
 
 button:hover {
-    filter: brightness(110%);
+    filter: contrast(1.5);
 }
 
 button:active {
-    filter: brightness(100%);
+    filter: contrast(1);
 }
 
 .main-container {
@@ -33,12 +36,15 @@ button:active {
 .left-block {
     margin-left: 2em;
     margin-right: 1.5em;
+    width: 45%;
 }
 
 .right-block{
     margin-right: 3em;
     /**border-left: black solid 3px;**/
     padding-left: 2em;
+    width: 45%;
+    float: right;
 }
 
 .main-title {
@@ -54,7 +60,7 @@ button:active {
 }
 
 .main-title:nth-child(1) {
-    margin-top: 2em;
+    margin-top: 1.5em;
     padding-left: 15%;
 }
 
@@ -64,6 +70,10 @@ button:active {
     padding-left: 25%;
 }
 
+.big-logo {
+    margin-left: 1em;
+    width: 95%;
+}
 /*.big-logo {
     border-top: black 3px solid;
 }*/
@@ -114,32 +124,45 @@ button:active {
 
 .nav-btns {
     display: inline-block;
+    width: 90%;
 }
 
 .nav-btn {
+    white-space: nowrap;
+    overflow: hidden;
     font-size: 22px;
-    margin: .5em 50% .5em auto;
+    margin: .5em 30% .5em .5em;
     padding: .2em 1em;
     border: solid 4px;
+    transition: all 1s;
 }
-
 
 .nav-btn:nth-child(2) {
     border-color: rgb(247, 163, 18);
-    background-color: rgb(254, 208, 129);
-}
-
-.nav-btn:nth-child(3) {
-    border-color: rgb(110, 252, 148);
-    background-color: rgb(179, 252, 198);
-    margin-left: 50%;
-    margin-right: auto;
-    float: right;
+    background-color: rgb(254, 208, 129) ;
 }
 
 .nav-btn:nth-child(4) {
+    border-color: rgb(110, 252, 148);
+    background-color: rgb(179, 252, 198);
+    margin-left: 30%;
+    margin-right: .5em;
+    float: right;
+}
+
+.nav-btn:nth-child(6) {
     border-color: rgb(95, 159, 248);
     background-color: rgb(153, 192, 245);
+}
+
+.nav-btn:hover {
+    padding-left: 3em;
+    padding-right: 3em;
+}
+
+.nav-btn:active {
+    filter: contrast(0.8);
+    transition: .3s;
 }
 
 .about-btn {
