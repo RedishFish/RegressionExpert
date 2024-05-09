@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <%- include('layouts/header'); -%>
+  <body>
+    <h1>Log In</h1>
+    <form action="/login" method="post">
+    <p>Username: </p>
+    <input id="user" name="user">
+    <p>Password: </p>
+    <input id="pwd" name="pwd"></input>
+    <button onclick='showAlert()'>Go</button>
+    </form>
+    <p id='alert'></p>
+    <button onclick="window.location.href='index';">Home Page</button>
+
+    <script>
+      function showAlert(){
+        let msg = document.getElementById('alert');
+        msg.innerText = "Invalid username and/or password!";
+        msg.style.color = 'red';
+      }
+    </script>
+  </body>
+</html>
