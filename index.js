@@ -31,6 +31,15 @@ app.get('/success', (req, res) => {
 app.get('/home', (req, res) => {
   res.render('home');
 });
+app.get('/graph-editor', (req, res) => {
+  res.render('graph-editor');
+});
+app.get('/saved', (req, res) => {
+  res.render('saved');
+});
+app.get('/settings', (req, res) => {
+  res.render('settings');
+});
 
 app.listen(3000, () => {
   console.log('Express server initiated.');
