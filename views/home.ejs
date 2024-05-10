@@ -65,6 +65,8 @@
       function closePopup(){
         popup.classList.remove('open-popup')
       }
+      const user = localStorage.getItem("username");
+      document.getElementsByClassName('user-to-greet')[0].innerText = user;
     </script>
   </body>
 </html>
