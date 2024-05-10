@@ -8,7 +8,7 @@
     <input id="user" name="user">
     <p>Password: </p>
     <input id="pwd" name="pwd"></input>
-    <button onclick='showAlert()'>Go</button>
+    <button onclick="showAlert(); getUser();">Go</button>
     </form>
     <p id='alert'></p>
     <button onclick="window.location.href='index';">Home Page</button>
@@ -18,6 +18,11 @@
         let msg = document.getElementById('alert');
         msg.innerText = "Invalid username and/or password!";
         msg.style.color = 'red';
+      }
+      function getUser(){
+        let username = document.getElementById('user');
+        localStorage.setItem('username', username.value);
+        console.log(localStorage.getItem('username'));
       }
     </script>
   </body>
