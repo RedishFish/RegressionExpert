@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    box-sizing: border-box;
+    font-family: "Raleway", sans-serif;
+    font-size: 18px;
+    font-weight: normal;
+    color: black;
+    padding: .3em;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: rgb(248, 255, 255);
+    height: 100%;
+}
+
+div {
+    display: inline;
+}
+
+.nav-bar {
+    width: 100%;
+    height: 100px;
+    display: inline-block;
+    background-color: #afc9ff;
+    border-bottom: 5px solid rgb(59, 59, 59);
+}
+
+.nav-bar * {
+    margin: 0;
+    padding-top: auto;
+    padding-bottom: auto;
+}
+
+.small-logo {
+    height: 50px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+button {
+    border: 2px solid black;
+    font-weight: bold;
+    background-color: #cbcaca;
+}
+
+button:hover {
+    background-color: #ababab;
+}
+
+button:active {
+    background-color: #b5b5b5;
+}
+
+.nav-bar button {
+    border: none;
+}
+
+.save-btn{
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+.save-btn:hover {
+    color: #4c4c4c;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.save-btn:active {
+    filter: contrast(0.25);
+}
+
+.__do-btns {
+}
+
+.__do-btns img {
+    height: 50px;
+}
+
+.__do-btns button {
+    padding: 5px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.main-workspace-btns button {
+    width: 50px;
+    height: 50px;
+    margin: 50px 20px 100px 30px;
+    padding: 0;
+}
+
+.main-workspace-btns :nth-child(6) {
+    width: 100px;
+    height: 50px;
+    float: right;
+}
+
+.main-workspace-btns button img {
+    width: 90%;
+    height: 90%;
+}
