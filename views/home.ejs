@@ -18,7 +18,13 @@
         />
       </div>
       <div class="right-block">
-        <button class="logout-btn">Logout</button>
+        <button class="logout-btn" onclick="openPopup()">Logout</button>
+        <div class="popup" id="popup">
+          <h2>Are you sure you want to log out?</h2>
+          
+          <button type="button" onclick="closePopup()">No</button>
+          <button type="button" onclick="window.location.href='index';">Yes</button>
+        </div> 
         <div class="greet-message">
           <p class="greet">Welcome,</p>
           <p class="user-to-greet">...</p>
@@ -49,5 +55,16 @@
         <p class="quote-author">- Hans Rosling</p>
       </div>
     </div>
+    <script>
+      let popup = document.getElementById('popup')
+
+      function openPopup(){
+        popup.classList.add('open-popup')
+      }
+
+      function closePopup(){
+        popup.classList.remove('open-popup')
+      }
+    </script>
   </body>
 </html>
