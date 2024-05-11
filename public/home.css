@@ -74,6 +74,7 @@ button:active {
     margin-left: 1em;
     width: 95%;
 }
+
 /*.big-logo {
     border-top: black 3px solid;
 }*/
@@ -104,7 +105,7 @@ button:active {
 .user-to-greet {
     margin-left: 3em;
     font-weight: bold;
-    
+
 }
 
 .hr {
@@ -184,27 +185,4 @@ button:active {
 .quote-author {
     text-align: right;
     font-weight: bold;
-}
-
-.popup{
-    width: 400px;
-    background: #fff;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    border-radius: 6px;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.1);
-    text-align: center;
-    padding: 0 30px 60px;
-    color: #333;
-    visibility: hidden;
-    transition: all 0.4s ease-in-out;
-}
-
-.open-popup{
-    visibility: visible;
-    top: 50%;
-    transform: translate(-50%, -50%) scale(1);
 }
