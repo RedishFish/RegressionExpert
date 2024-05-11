@@ -1,4 +1,5 @@
-// Bug noticed: when scaling the graph, sometimes the last ticks disappear on the axes
+// Bug noticed: when scaling the graph, sometimes the last ticks disappear on the axes.
+// Bug: Points plotted offset from cursor
 
 let X_STEP = 25;
 let Y_STEP = 25;
@@ -7,7 +8,11 @@ let Y_SUBSTEP = 5;
 let X_RANGE = [-50, 100];
 let Y_RANGE = [-50, 100];
 const GRAPH_PADDING = 20;
+let x_substepPixels, x_stepPixels, y_axisPos, y_substepPixels, y_stepPixels, x_axisPos;
+
 let debug = true; //for debug
+
+let points = [];
 
 function setup() {
     createCanvas(windowWidth*0.75, windowHeight-200);
@@ -17,12 +22,12 @@ function setup() {
 
 function draw() {
     //axis lines
-    let x_substepPixels = (width-GRAPH_PADDING*2)/((X_RANGE[1]-X_RANGE[0])/X_SUBSTEP);
-    let x_stepPixels = (width-GRAPH_PADDING*2)/((X_RANGE[1]-X_RANGE[0])/X_STEP);
-    let y_axisPos = GRAPH_PADDING + x_substepPixels*(-X_RANGE[0]/X_SUBSTEP);
-    let y_substepPixels = (height-GRAPH_PADDING*2)/((Y_RANGE[1]-Y_RANGE[0])/Y_SUBSTEP);
-    let y_stepPixels = (height-GRAPH_PADDING*2)/((Y_RANGE[1]-Y_RANGE[0])/Y_STEP);
-    let x_axisPos = GRAPH_PADDING + y_substepPixels*(Y_RANGE[1]/Y_SUBSTEP);
+    x_substepPixels = (width-GRAPH_PADDING*2)/((X_RANGE[1]-X_RANGE[0])/X_SUBSTEP);
+    x_stepPixels = (width-GRAPH_PADDING*2)/((X_RANGE[1]-X_RANGE[0])/X_STEP);
+    y_axisPos = GRAPH_PADDING + x_substepPixels*(-X_RANGE[0]/X_SUBSTEP);
+    y_substepPixels = (height-GRAPH_PADDING*2)/((Y_RANGE[1]-Y_RANGE[0])/Y_SUBSTEP);
+    y_stepPixels = (height-GRAPH_PADDING*2)/((Y_RANGE[1]-Y_RANGE[0])/Y_STEP);
+    x_axisPos = GRAPH_PADDING + y_substepPixels*(Y_RANGE[1]/Y_SUBSTEP);
 
     //console.log("dimensions: " + width + ", " + height);
     //console.log("origin: " + x_axisPos + ", " + y_axisPos);
@@ -70,4 +75,84 @@ function draw() {
 function windowResized() {
     resizeCanvas(windowWidth*0.75, windowHeight-200);
     background(235, 235, 235);
+}
+
+let workspaceKeyStatuses = {
+    'p': false
+};
+
+function keyPressed() {
+    if(key === 'p') {
+        if(!workspaceKeyStatuses['p']){
+            cursor(CROSS);
+            workspaceKeyStatuses['p'] = true;
+        }
+        else{
+            cursor(ARROW);
+            workspaceKeyStatuses['p'] = false;
+        }
+    }
+    //for testing only - portion copied from linearReg.html
+    if(key === 'n') {
+        // init Pyodide
+        async function main() {
+            let pyodide = await loadPyodide();
+            return pyodide;
+        }
+        let pyodideReadyPromise = main();
+
+        let m, b;
+        async function addPython(){
+            let pyodide = await pyodideReadyPromise;
+            try {
+                // in this array one can type Python
+                pyodide.globals.set("points", points);
+                let output = pyodide.runPython(`
+                    for i in points:
+                        cp = 0
+                        sx = 0
+                        sx2 = 0
+                        sy = 0
+
+                        for i in range(len(points)):
+                            cp += points[i][0]*points[i][1]
+                            sx += points[i][0]
+                            sx2 += points[i][0]*points[i][0]
+                            sy += points[i][1]
+
+                        a = (len(points)*cp-sx*sy)/(len(points)*sx2-sx*sx)
+                        b = (sy/len(points))-a*(sx/len(points))
+                        ans = str(a)+"x"+str(b)
+                `)
+                m = pyodide.globals.toJs().get('a');
+                b = pyodide.globals.toJs().get('b');
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+
+        addPython().then(() => {
+            let x_left = X_STEP*((0-y_axisPos)/x_stepPixels);
+            let y_left = m*x_left+b;
+            let x_right = X_STEP*((width-y_axisPos)/x_stepPixels);
+            let y_right = m*x_right+b;
+            let conversionFactor = y_stepPixels/Y_STEP;
+
+            console.log(x_left, y_left, x_right, y_right, conversionFactor);
+            console.log(0, y_left*conversionFactor+x_axisPos, width, y_right*conversionFactor+x_axisPos);
+
+            strokeWeight(3);
+            line(0, x_axisPos-y_left*conversionFactor, width, x_axisPos-y_right*conversionFactor);
+        });
+    }
+}
+
+function mouseClicked() {
+    //plot point
+    if(workspaceKeyStatuses['p']) {
+        fill('black');
+        circle(mouseX, mouseY, 5);
+        points.push([X_STEP*((mouseX-y_axisPos)/x_stepPixels), Y_STEP*(-(mouseY-x_axisPos)/y_stepPixels)]);
+    }
 }
