@@ -158,3 +158,14 @@ button:active {
     font-weight: bold;
     text-align: center;
 }
+
+.graph-display {
+    overflow: auto;
+    border: solid 2px black;
+}
+
+canvas {
+    margin-left: 5em;
+    padding: 0;
+    margin: 0;
+}
