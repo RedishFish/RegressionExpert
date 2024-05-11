@@ -22,11 +22,11 @@ button {
 }
 
 button:hover {
-    filter: contrast(1.5);
+    filter: brightness(1.2);
 }
 
 button:active {
-    filter: contrast(1);
+    filter: brightness(1);
 }
 
 .main-container {
@@ -91,7 +91,7 @@ button:active {
     margin: 1em auto 3em 100%;
     float: right;
     padding: .2em .5em;
-    background-color: rgb(251, 132, 119);
+    background-color: rgb(243, 118, 104);
 }
 
 .greet-message {
@@ -185,4 +185,40 @@ button:active {
 .quote-author {
     text-align: right;
     font-weight: bold;
+}
+
+.popup {
+    border: black solid 2px;
+    background-color: #e6e6e6;
+    width: 400px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.1);
+    text-align: center;
+    padding: 0 30px 60px;
+    color: #333;
+    visibility: hidden;
+    transition: all 0.4s ease-in-out;
+}
+
+.popup h2 {
+    background-color: inherit;
+}
+
+.yes-btn {
+    background-color: #fc3131;
+}
+
+.no-btn {
+    background-color: #858e8e;
+}
+
+.open-popup {
+    visibility: visible;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
 }
