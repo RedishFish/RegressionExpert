@@ -9,11 +9,9 @@
   </head>
   <body>
     <nav class="nav-bar">
-      <img
-        class="small-logo"
-        src="RegressionExpert-small-logo.png"
-        alt="RegressionExpert"
-      />
+      <a href="/home" class="small-logo">
+        <img src="RegressionExpert-small-logo.png" alt="RegressionExpert"
+      /></a>
       <input
         class="graph-title-input"
         type="text"
@@ -24,30 +22,44 @@
         <span class="save-status">✓</span>
       </div>
       <div class="__do-btns">
-        <div class="undo-container">
+        <div class="__do-btn undo-container">
           <button><img src="undo-icon.png" alt="Undo icon" /></button>
+          <br />
           <span>Undo (Ctrl-Z)</span>
         </div>
-        <div class="redo-container">
+        <div class="__do-btn redo-container">
           <button><img src="redo-icon.png" alt="Redo icon" /></button>
+          <br />
           <span>Redo (Ctrl-Shift-Z)</span>
         </div>
       </div>
     </nav>
     <div class="main-workspace">
       <div class="main-workspace-btns">
-        <button><img src="plot.png" alt="plot" /></button>
-        <span>Plot (P)</span>
-        <button><img src="delete.png" alt="delete" /></button>
-        <span>Delete (D)</span>
-        <button><img src="select.png" alt="select" /></button>
-        <span>Select (S)</span>
-        <button><img src="x-scale.png" alt="x-scale" /></button>
-        <span>x-scale (X)</span>
-        <button><img src="y-scale.png" alt="y-scale" /></button>
-        <span>y-scale (Y)</span>
-        <button><img src="new-regression.png" alt="new regression" /></button>
-        <span>New Regression (R)</span>
+        <div class="main-workspace-btn">
+          <button><img src="plot.png" alt="plot" /></button>
+          <span>Plot (P)</span>
+        </div>
+        <div class="main-workspace-btn">
+          <button><img src="delete.png" alt="delete" /></button>
+          <span>Delete (D)</span>
+        </div>
+        <div class="main-workspace-btn">
+          <button><img src="select.png" alt="select" /></button>
+          <span>Select (S)</span>
+        </div>
+        <div class="main-workspace-btn">
+          <button><img src="x-scale.png" alt="x-scale" /></button>
+          <span>x-scale (X)</span>
+        </div>
+        <div class="main-workspace-btn">
+          <button><img src="y-scale.png" alt="y-scale" /></button>
+          <span>y-scale (Y)</span>
+        </div>
+        <div class="main-workspace-btn">
+          <button><img src="new-regression.png" alt="new regression" /></button>
+          <span>New Regression (R)</span>
+        </div>
       </div>
       <div class="graph-display">
         <script src="graph.js"></script>

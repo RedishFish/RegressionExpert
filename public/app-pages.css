@@ -19,28 +19,27 @@ body {
     height: 100%;
 }
 
-div {
-    display: inline;
-}
-
+/** nav-bar **/
 .nav-bar {
     width: 100%;
     height: 100px;
-    display: inline-block;
+    display: flex;
     background-color: #afc9ff;
     border-bottom: 5px solid rgb(59, 59, 59);
 }
 
-.nav-bar * {
-    margin: 0;
-    padding-top: auto;
-    padding-bottom: auto;
+.nav-bar > * {
+    margin: auto .5em;
 }
 
 .small-logo {
-    height: 50px;
+    height: 100%;
     margin-top: auto;
     margin-bottom: auto;
+}
+
+.small-logo img {
+    height: 100%;
 }
 
 button {
@@ -77,32 +76,85 @@ button:active {
 }
 
 .__do-btns {
+    display: flex;
+}
+
+.__do-btn {
+    width: 100px;
+    display: block;
+    white-space: nowrap;
+    text-align: center;
 }
 
 .__do-btns img {
-    height: 50px;
+    height: 40px;
 }
 
 .__do-btns button {
-    padding: 5px;
-    margin-top: auto;
-    margin-bottom: auto;
+    border-radius: 20%;
+    padding: 2px;
+    background-color: rgba(0, 0, 0, 0);
 }
 
-.main-workspace-btns button {
-    width: 50px;
-    height: 50px;
-    margin: 50px 20px 100px 30px;
-    padding: 0;
+.__do-btns button:hover {
+    background-color: rgba(0, 0, 0, .1);
 }
 
-.main-workspace-btns :nth-child(6) {
-    width: 100px;
-    height: 50px;
+.__do-btns button:active {
+    background-color: rgba(0, 0, 0, .2);
+}
+
+.__do-btns span {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/** Main workspace **/
+.main-workspace {
+    width: 75vw;
+    height: auto;
+}
+
+.main-workspace-btns {
+    display: flex;
+}
+
+.main-workspace-btns > :nth-child(6n) {
     float: right;
 }
 
-.main-workspace-btns button img {
-    width: 90%;
-    height: 90%;
+.main-workspace-btn {
+    width: 75px;
+    margin-left: .5em;
+    margin-right: .5em;
+    display: block;
+    text-align: center;
+}
+
+.main-workspace-btn button {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    margin: auto;
+}
+
+.main-workspace-btns > :nth-child(6n) button {
+    width: 100px;
+    height: 50px;
+}
+
+.main-workspace-btn:nth-of-type(6) {
+    width: 125px;
+}
+
+.main-workspace-btn button img {
+    width: 100%;
+    height: 100%;
+}
+
+.main-workspace-btn span {
+    margin: 5px auto;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
 }
