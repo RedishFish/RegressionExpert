@@ -6,7 +6,7 @@ let X_SUBSTEP = 5;
 let Y_SUBSTEP = 5;
 let X_RANGE = [-50, 100];
 let Y_RANGE = [-50, 100];
-const GRAPH_PADDING = 200;
+const GRAPH_PADDING = 20;
 let debug = true; //for debug
 
 function setup() {
@@ -69,4 +69,5 @@ function draw() {
 
 function windowResized() {
     resizeCanvas(windowWidth*0.75, windowHeight-200);
+    background(235, 235, 235);
 }
