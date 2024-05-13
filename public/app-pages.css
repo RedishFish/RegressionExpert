@@ -19,6 +19,11 @@ body {
     height: 100%;
 }
 
+main {
+    padding: 0;
+    margin: 0;
+}
+
 /** nav-bar **/
 .nav-bar {
     width: 100%;
@@ -162,6 +167,7 @@ button:active {
 .graph-display {
     overflow: auto;
     border: solid 2px black;
+    
 }
 
 canvas {
