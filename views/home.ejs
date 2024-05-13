@@ -23,7 +23,7 @@
           <h2>Are you sure you want to log out?</h2>
           
           <button type="button" onclick="closePopup()" class="no-btn">No</button>
-          <button type="button" onclick="window.location.href='index';" class="yes-btn">Yes</button>
+          <button type="button" onclick="logout()" class="yes-btn">Yes</button>
         </div> 
         <div class="greet-message">
           <p class="greet">Welcome,</p>
@@ -65,7 +65,17 @@
       function closePopup(){
         popup.classList.remove('open-popup')
       }
+
+      function logout(){
+        window.location.href = "index";
+        localStorage.removeItem("username");
+      }
+
       const user = localStorage.getItem("username");
+      if(user == null){
+        alert("You are not logged in. Please log in first. ");
+        window.location.href = "index";
+      }
       document.getElementsByClassName('user-to-greet')[0].innerText = user;
     </script>
   </body>
