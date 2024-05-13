@@ -25,13 +25,29 @@ let workspaceKeyStatuses = {
 };
 
 function setup() {
-    createCanvas(windowWidth*0.75, windowHeight-200);
+    let canvas = createCanvas(windowWidth*0.75, windowHeight-200);
+    canvas.mouseClicked(onCanvasClick);
+
     background(245);
     textAlign(CENTER, CENTER);
 }
   
 function draw() {
     background(245);
+
+    if(workspaceKeyStatuses['p']) { // Main code for when a point is plotted is in onCanvasClick
+        cursor(CROSS);
+    }
+    else{
+        cursor(ARROW);
+    }
+    if(workspaceKeyStatuses['d']) {
+        for(let i = 0; i < selectedPoints.length; i++) {
+            points.splice(points.indexOf(selectedPoints[i]), 1);
+        }
+        selectedPoints = [];
+        workspaceKeyStatuses['d'] = false;
+    }
 
     // Axis lines
     x_substepPixels = (width-GRAPH_PADDING*2)/((X_RANGE[1]-X_RANGE[0])/X_SUBSTEP);
@@ -135,21 +151,13 @@ function windowResized() {
 
 function keyPressed() {
     if(key === 'p') {
-        if(!workspaceKeyStatuses['p']){
-            cursor(CROSS);
-            workspaceKeyStatuses['p'] = true;
-        }
-        else{
-            cursor(ARROW);
-            workspaceKeyStatuses['p'] = false;
-        }
+        workspaceKeyStatuses['p'] = !workspaceKeyStatuses['p'];
     }
 
+    clearKeyStatuses();
+
     if(key === 'd') {
-        for(let i = 0; i < selectedPoints.length; i++) {
-            points.splice(points.indexOf(selectedPoints[i]), 1);
-        }
-        selectedPoints = [];
+        workspaceKeyStatuses['d'] = true;
     }
 
     if(key === 's'){
@@ -191,7 +199,7 @@ function keyPressed() {
                 b = pyodide.globals.toJs().get('b');
             }
             catch (err) {
-                console.log(err);
+                alert("Regression Error: " + err);
             }
         }
 
@@ -201,7 +209,8 @@ function keyPressed() {
     }
 }
 
-function mouseClicked() {
+function onCanvasClick() {
+    //console.log("clicked");
     //plot point
     if (workspaceKeyStatuses['p']) {
         points.push([X_STEP*((mouseX-y_axisPos)/x_stepPixels), Y_STEP*(-(mouseY-x_axisPos)/y_stepPixels)]);
@@ -215,7 +224,7 @@ function mouseClicked() {
                 }
                 else{
                     selectedPoints.push(points[i]);
-                    console.log(selectedPoints);
+                    //console.log(selectedPoints);
                 }
                 break; //only want to select oppne point at a time
             }
