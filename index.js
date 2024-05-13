@@ -35,6 +35,9 @@ app.get('/saved', (req, res) => {
 app.get('/settings', (req, res) => {
   res.render('settings');
 });
+app.get('/about', (req, res) => {
+  res.render('about');
+});
 
 app.listen(3000, () => {
   console.log('Express server initiated.');
