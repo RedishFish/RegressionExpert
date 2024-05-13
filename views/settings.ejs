@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings</title>
+    <button class="logout-btn" onclick="openPopup()">Logout</button>
+    <div class="popup" id="popup">
+      <h2>Are you sure you want to log out?</h2>
+
+      <button type="button" onclick="closePopup()" class="no-btn">No</button>
+      <button type="button" onclick="logout()" class="yes-btn">Yes</button>
+    </div>
+    <link rel="stylesheet" href="app-pages.css" />
+  </head>
+  <body>
+      <a href="/home" class="small-logo">
+        <img src="RegressionExpert-small-logo.png" alt="RegressionExpert"
+      /></a>
+      <h1 class='main-title'>Settings</h1>
+      <div class='settings-list'>
+        <p>Enter current password:</p>
+        <input>
+        <p>Enter new password:</p>
+        <input>
+        <p>Confirm new password:</p>
+        <input>
+        <button onclick="change()">Change</button>
+      </div>
+      <button onclick="getAccSettings()">Account Settings</button><br>
+      <button>Visuals/GUI</button><br>
+      <button>Change Password</button><br>
+    <button onclick="window.location.href='home';">Home Page</button>
+    <script>
+      let popup = document.getElementById('popup')
+
+      function openPopup(){
+        popup.classList.add('open-popup')
+      }
+
+      function closePopup(){
+        popup.classList.remove('open-popup')
+      }
+
+      function logout(){
+        window.location.href = "index";
+        localStorage.removeItem("username");
+      }
+
+      function change(){
+        
+      }
+
+      function getAccSettings(){
+        let box = document.getElementsByClassName("settings-list");
+        
+      }
+      /*
+      const user = localStorage.getItem("username");
+      if(user == null){
+        alert("You are not logged in. Please log in first. ");
+        window.location.href = "index";
+      }
+      document.getElementsByClassName('user-to-greet')[0].innerText = user;
+      */
+    </script>
+  </body>
+</html>
