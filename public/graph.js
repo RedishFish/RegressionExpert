@@ -1,5 +1,6 @@
 // Bug noticed: when scaling the graph, sometimes the last ticks disappear on the axes.
 // Bug: Points plotted offset from cursor - solved, need even diameter
+// Bug: for select feature what if 2 points have the exact same coordinates?
 
 let X_STEP = 25;
 let Y_STEP = 25;
@@ -18,15 +19,22 @@ let lines = [];
 let selectedPoints = [];
 let selectedLines = [];
 
+let startDrag_X, startDrag_Y, endDrag_X, endDrag_Y;
+
 let workspaceKeyStatuses = {
     'p': false,
     'd': false,
-    's': false
+    's': false,
+    'x': false,
+    'y': false,
+    'n': false,
+    'ctrl-z': false,
+    'ctrl-shift-z': false
 };
 
 function setup() {
     let canvas = createCanvas(windowWidth*0.75, windowHeight-200);
-    canvas.mouseClicked(onCanvasClick);
+    canvas.mousePressed(onCanvasClick);
 
     background(245);
     textAlign(CENTER, CENTER);
@@ -47,6 +55,15 @@ function draw() {
         }
         selectedPoints = [];
         workspaceKeyStatuses['d'] = false;
+    }
+    if(workspaceKeyStatuses['s']) {
+        strokeWeight(1);
+        stroke('black');
+        fill('rgba(220, 220, 220, .2)')
+        drawingContext.save();
+        drawingContext.setLineDash([5, 5]);
+        rect(startDrag_X, startDrag_Y, endDrag_X-startDrag_X, endDrag_Y-startDrag_Y);
+        drawingContext.restore();
     }
 
     // Axis lines
@@ -154,14 +171,12 @@ function keyPressed() {
         workspaceKeyStatuses['p'] = !workspaceKeyStatuses['p'];
     }
 
-    clearKeyStatuses();
-
     if(key === 'd') {
         workspaceKeyStatuses['d'] = true;
     }
 
     if(key === 's'){
-        ;
+        workspaceKeyStatuses['s'] = !workspaceKeyStatuses['s'];
     }
 
     //for testing only - portion copied from linearReg.html
@@ -215,19 +230,56 @@ function onCanvasClick() {
     if (workspaceKeyStatuses['p']) {
         points.push([X_STEP*((mouseX-y_axisPos)/x_stepPixels), Y_STEP*(-(mouseY-x_axisPos)/y_stepPixels)]);
     }
+    else if (workspaceKeyStatuses['s']) {
+        startDrag_X = mouseX;
+        startDrag_Y = mouseY;
+        endDrag_X = mouseX;
+        endDrag_Y = mouseY;
+    }
     else {
+        let pointClicked = false;
+
         for(let i = 0; i < points.length; i++){
             let d = Math.sqrt(((y_axisPos+points[i][0]*x_conversionFactor)-mouseX)**2 + ((x_axisPos-points[i][1]*y_conversionFactor)-mouseY)**2) - 3;
             if(d < 1) {
                 if(selectedPoints.includes(points[i])){
                     selectedPoints.splice(selectedPoints.indexOf(points[i]), 1);
+                    pointClicked = true;
                 }
                 else{
                     selectedPoints.push(points[i]);
+                    pointClicked = true;
                     //console.log(selectedPoints);
                 }
-                break; //only want to select oppne point at a time
+                break; //only want to select one point at a time
             }
         }
+        if(!pointClicked) { //deselect all points if clicked on empty space
+            selectedPoints = [];
+        }
+    }
+}
+
+function mouseDragged() {
+    if(workspaceKeyStatuses['s']) {
+        endDrag_X = mouseX;
+        endDrag_Y = mouseY;
+    }
+}
+
+function mouseReleased() {
+    if(workspaceKeyStatuses['s']) {
+        for(let i = 0; i < points.length; i++){ 
+            let x = y_axisPos+points[i][0]*x_conversionFactor;
+            let y = x_axisPos-points[i][1]*y_conversionFactor;
+            if(startDrag_X < x && x < endDrag_X && startDrag_Y < y && y < endDrag_Y && !selectedPoints.includes(points[i])){
+                selectedPoints.push(points[i]);
+            }
+        }
+        workspaceKeyStatuses['s'] = false;
+        startDrag_X = 0;
+        startDrag_Y = 0;
+        endDrag_X = 0;
+        endDrag_Y = 0;
     }
 }
