@@ -13,15 +13,22 @@
       <a href="/home" class="small-logo">
         <img src="RegressionExpert-small-logo.png" alt="RegressionExpert"
       /></a>
+      <form action='/graph-editor' method='post'>
       <input
         class="graph-title-input"
         type="text"
-        placeholder="Untitled Graph"
+        placeholder="Untitled Graph" name='name'
       />
       <div class="save-container">
-        <button class="save-btn">Save</button>
+        <button class="save-btn" type="submit">Save</button>
         <span class="save-status">✓</span>
       </div>
+      <div>
+        <input id='user' name='user'></input>
+        <input id='points' name='points'></input>
+        <input id='lines' name='lines'></input>
+      </div>
+      </form>
       <div class="__do-btns">
         <div class="__do-btn undo-container">
           <button><img src="undo-icon.png" alt="Undo icon" /></button>
