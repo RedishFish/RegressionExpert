@@ -59,12 +59,14 @@ app.post('/newacc', (req, res) => {
     }
     try {
       if(ans[0].username == user){
-        
+
       }
     }
     catch {
       db.serialize(() => {
-        const stmt = db.prepare("INSERT INTO users VALUES (\""+user+"\", \""+pwd+"\")");
+        let stmt = db.prepare("INSERT INTO users VALUES (\""+user+"\", \""+pwd+"\")");
+        stmt.run();
+        stmt = db.prepare("CREATE TABLE "+user+" (name TEXT, points TEXT, regressions TEXT);");
         stmt.run();
         stmt.finalize();
         res.redirect('success');
@@ -76,7 +78,7 @@ app.post('/newacc', (req, res) => {
 app.post('/login', (req, res) => {
   const user = req.body.user;
   const pwd = req.body.pwd;
-  let sql = "SELECT pwd FROM users WHERE username = \""+user+"\"";
+  let sql = "SELECT pwd FROM users WHERE username = \""+user+"\";";
   db.all(sql, [], (err, ans) => {
     if(err){
       throw err;
@@ -87,7 +89,18 @@ app.post('/login', (req, res) => {
       }
     }
     catch {
-      
+
     }
   });
+});
+
+app.post('/graph-editor', (req, res) =>{
+  const user = req.body.user;
+  const points = req.body.points;
+  const lines = req.body.lines;
+  const name = req.body.name;
+  console.log(name);
+  let sql = db.prepare("INSERT INTO "+user+" VALUES (\""+name+"\", \""+points+"\", \""+lines+"\");");
+  sql.run();
+  sql.finalize();
 });
