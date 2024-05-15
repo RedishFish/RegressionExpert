@@ -54,12 +54,13 @@ button {
 }
 
 button:hover {
-    background-color: #ababab;
+    filter: contrast(1.5);
 }
 
 button:active {
-    background-color: #b5b5b5;
+    filter: contrast(1);
 }
+
 
 .nav-bar button {
     border: none;
@@ -120,15 +121,15 @@ button:active {
     height: auto;
 }
 
-.main-workspace-btns {
+.main-workspace-btns-container {
     display: flex;
 }
 
-.main-workspace-btns > :nth-child(6n) {
+.main-workspace-btns-container > :nth-child(6n) {
     float: right;
 }
 
-.main-workspace-btn {
+.main-workspace-btn-container {
     width: 75px;
     margin-left: .5em;
     margin-right: .5em;
@@ -136,28 +137,28 @@ button:active {
     text-align: center;
 }
 
-.main-workspace-btn button {
+.main-workspace-btn-container button {
     width: 50px;
     height: 50px;
     padding: 0;
     margin: auto;
 }
 
-.main-workspace-btns > :nth-child(6n) button {
+.main-workspace-btns-container > :nth-child(6n) button {
     width: 100px;
     height: 50px;
 }
 
-.main-workspace-btn:nth-of-type(6) {
+.main-workspace-btn-container:nth-of-type(6) {
     width: 125px;
 }
 
-.main-workspace-btn button img {
+.main-workspace-btn-container button img {
     width: 100%;
     height: 100%;
 }
 
-.main-workspace-btn span {
+.main-workspace-btn-container span {
     margin: 5px auto;
     font-size: 10px;
     font-weight: bold;
@@ -174,4 +175,82 @@ canvas {
     margin-left: 5em;
     padding: 0;
     margin: 0;
+}
+
+.popup {
+    display: none;
+    font-size: 12px;
+    border: black solid 2px;
+    width: 200px;
+    padding: 20px 10px 10px 10px;
+    opacity: 0.8;
+    background-image: linear-gradient(to bottom, rgb(0, 153, 255) 50px, rgb(247, 247, 247) 50px);
+}
+
+
+.popup * {
+    font-size: 12px;
+}
+
+.popup-label {
+    font-size: 1.5em;
+    color: white;
+}
+
+.exit-btn {
+    float: right;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+    background-color: rgb(204, 0, 0);
+    color: white;
+}
+
+.enter-btn {
+    display: flex;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.properties {
+    margin-top: 20px;
+}
+
+.property {
+    display: grid;
+}
+
+.property span{
+    font-weight: normal;
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.property input {
+    height: 1.5em;
+    width: 50px;
+    float: right;
+    font-size: 1em;
+    border: none;
+    border-bottom: 1px solid black;
+    margin-left: 2px;
+    background-color: transparent;
+}
+
+.descriptors {
+    display: flex;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.descriptor {
+    font-size: 8px;
+}
+
+.second-descriptor {
+    position: relative;
+    right: 30px;
 }

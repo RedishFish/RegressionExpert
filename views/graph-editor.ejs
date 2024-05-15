@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/p5@1.9.3/lib/p5.js"></script>
     <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
     <script src="workspaceButtons.js"></script>
+    <script src="popupHandler.js"></script>
   </head>
   <body>
     <nav class="nav-bar">
@@ -37,44 +38,95 @@
       </div>
     </nav>
     <div class="main-workspace">
-      <div class="main-workspace-btns">
-        <div class="main-workspace-btn">
+      <div class="main-workspace-btns-container">
+        <div class="main-workspace-btn-container">
           <button id="plot-btn">
             <img src="plot.png" alt="plot" />
           </button>
           <span>Plot (P)</span>
         </div>
-        <div class="main-workspace-btn">
+        <div class="main-workspace-btn-container">
           <button id="delete-btn"><img src="delete.png" alt="delete" /></button>
           <span>Delete (D)</span>
         </div>
-        <div class="main-workspace-btn">
+        <div class="main-workspace-btn-container">
           <button id="select-btn"><img src="select.png" alt="select" /></button>
           <span>Select (S)</span>
         </div>
-        <div class="main-workspace-btn">
+        <div class="main-workspace-btn-container">
           <button id="x-scale-btn">
             <img src="x-scale.png" alt="x-scale" />
           </button>
           <span>x-scale (X)</span>
         </div>
-        <div class="main-workspace-btn">
+        <div class="main-workspace-btn-container">
           <button id="y-scale-btn">
             <img src="y-scale.png" alt="y-scale" />
           </button>
           <span>y-scale (Y)</span>
         </div>
-        <div class="main-workspace-btn">
+        <div class="main-workspace-btn-container">
           <button id="new-regression-btn">
             <img src="new-regression.png" alt="new regression" />
           </button>
           <span>New Regression (N)</span>
         </div>
       </div>
+      <div class="popups-containers">
+        <div class="popup x-scale-popup">
+          <div class="row">
+            <span class="popup-label">X-Scale</span>
+            <button class="exit-btn">&times;</button>
+          </div>
+          <div class="properties">
+            <div class="property">
+              <div class="row">
+                <span># Ticks</span>
+                <input id="ticks-field" type="text" />
+              </div>
+            </div>
+            <div class="property">
+              <div class="row">
+                <span>Subticks</span>
+                <input id="subtick-field" type="text" />
+              </div>
+              <div class="descriptors">
+                <span class="descriptor"># between ticks</span>
+              </div>
+            </div>
+            <div class="property">
+              <div class="row">
+                <span>Limits</span>
+                <span>
+                  <input id="left-limit-field" type="text" />
+                  <input id="right-limit-field" type="text" />
+                </span>
+              </div>
+              <div class="descriptors">
+                <span class="descriptor second-descriptor">Left</span>
+                <span class="descriptor">Right</span>
+              </div>
+            </div>
+            <div class="property">
+              <div class="row">
+                <span>Axis break: </span>
+                <input id="x-axis-break-field" type="text" />
+              </div>
+              <div class="descriptors">
+                <span class="descriptor">To</span>
+              </div>
+            </div>
+            <div class="row">
+              <button class="enter-btn">Enter</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="graph-display">
         <script src="graph.js"></script>
       </div>
     </div>
+
     <div class="side-bar">
       <div class="points-side-bar"></div>
       <div class="regressions-side-bar"></div>
