@@ -32,7 +32,25 @@ function setup() {
   
 function draw() {
     background(245);
-
+    document.getElementById('user').value = localStorage.getItem('username');
+    let pointStr = "";
+    for(let i = 0; i < points.length; i++){
+        pointStr += "(";
+        pointStr += points[i][0].toFixed(2);
+        pointStr += ",";
+        pointStr += points[i][1].toFixed(2);
+        pointStr += "),";
+    }
+    let lineStr = "";
+    for(let i = 0; i < lines.length; i++){
+        lineStr += "(";
+        lineStr += lines[i]['m'].toFixed(2);
+        lineStr += ",";
+        lineStr += lines[i]['b'].toFixed(2);
+        lineStr += "),";
+    }
+    document.getElementById('points').value = pointStr;
+    document.getElementById('lines').value = lineStr;
     // Axis lines
     x_substepPixels = (width-GRAPH_PADDING*2)/((X_RANGE[1]-X_RANGE[0])/X_SUBSTEP);
     x_stepPixels = (width-GRAPH_PADDING*2)/((X_RANGE[1]-X_RANGE[0])/X_STEP);
