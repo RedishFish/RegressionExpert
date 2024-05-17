@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="app-pages.css" />
     <script src="https://cdn.jsdelivr.net/npm/p5@1.9.3/lib/p5.js"></script>
     <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+    <script src="onLoad.js"></script>
+    <script type="module" src="workspaceButtons.js"></script>
+    <script type="module" src="popupHandler.js"></script>
   </head>
   <body>
     <nav class="nav-bar">
@@ -45,36 +48,196 @@
       </div>
     </nav>
     <div class="main-workspace">
-      <div class="main-workspace-btns">
-        <div class="main-workspace-btn">
-          <button><img src="plot.png" alt="plot" /></button>
+      <div class="main-workspace-btns-container">
+        <div class="main-workspace-btn-container">
+          <button id="plot-btn">
+            <img src="plot.png" alt="plot" />
+          </button>
           <span>Plot (P)</span>
         </div>
-        <div class="main-workspace-btn">
-          <button><img src="delete.png" alt="delete" /></button>
+        <div class="main-workspace-btn-container">
+          <button id="delete-btn"><img src="delete.png" alt="delete" /></button>
           <span>Delete (D)</span>
         </div>
-        <div class="main-workspace-btn">
-          <button><img src="select.png" alt="select" /></button>
+        <div class="main-workspace-btn-container">
+          <button id="select-btn"><img src="select.png" alt="select" /></button>
           <span>Select (S)</span>
         </div>
-        <div class="main-workspace-btn">
-          <button><img src="x-scale.png" alt="x-scale" /></button>
+        <div class="main-workspace-btn-container">
+          <button id="x-scale-btn">
+            <img src="x-scale.png" alt="x-scale" />
+          </button>
           <span>x-scale (X)</span>
         </div>
-        <div class="main-workspace-btn">
-          <button><img src="y-scale.png" alt="y-scale" /></button>
+        <div class="main-workspace-btn-container">
+          <button id="y-scale-btn">
+            <img src="y-scale.png" alt="y-scale" />
+          </button>
           <span>y-scale (Y)</span>
         </div>
-        <div class="main-workspace-btn">
-          <button><img src="new-regression.png" alt="new regression" /></button>
-          <span>New Regression (R)</span>
+        <div class="main-workspace-btn-container">
+          <button id="new-regression-btn">
+            <img src="new-regression.png" alt="new regression" />
+          </button>
+          <span>New Regression (N)</span>
+        </div>
+      </div>
+      <div class="popups-containers">
+        <div class="popup x-scale-popup">
+          <div class="row">
+            <span class="popup-label">X-Scale</span>
+            <button class="exit-btn">&times;</button>
+          </div>
+          <div class="properties">
+            <div class="property">
+              <div class="row">
+                <span>Increment</span>
+                <input id="x-increment-field" type="text" />
+              </div>
+            </div>
+            <div class="property">
+              <div class="row">
+                <span>Subincrement</span>
+                <input id="x-subincrement-field" type="text" />
+              </div>
+            </div>
+            <div class="property">
+              <div class="row">
+                <span>Limits</span>
+                <span>
+                  <input id="x-right-limit-field" type="text" />
+                  <input id="x-left-limit-field" type="text" />
+                </span>
+              </div>
+              <div class="descriptors">
+                <span class="descriptor second-descriptor">Left</span>
+                <span class="descriptor">Right</span>
+              </div>
+            </div>
+            <div class="property">
+              <div class="row">
+                <span>Axis break: </span>
+                <input id="x-axis-break-field" type="text" value="TODO" />
+              </div>
+              <div class="descriptors">
+                <span class="descriptor">To</span>
+              </div>
+            </div>
+            <div class="row">
+              <button class="enter-btn">Enter</button>
+            </div>
+          </div>
+        </div>
+        <div class="popup y-scale-popup">
+          <div class="row">
+            <span class="popup-label">Y-Scale</span>
+            <button class="exit-btn">&times;</button>
+          </div>
+          <div class="properties">
+            <div class="property">
+              <div class="row">
+                <span>Increment</span>
+                <input id="y-increment-field" type="text" />
+              </div>
+            </div>
+            <div class="property">
+              <div class="row">
+                <span>Subincrement</span>
+                <input id="y-subincrement-field" type="text" />
+              </div>
+            </div>
+            <div class="property">
+              <div class="row">
+                <span>Limits</span>
+                <span>
+                  <input id="y-right-limit-field" type="text" />
+                  <input id="y-left-limit-field" type="text" />
+                </span>
+              </div>
+              <div class="descriptors">
+                <span class="descriptor second-descriptor">Left</span>
+                <span class="descriptor">Right</span>
+              </div>
+            </div>
+            <div class="property">
+              <div class="row">
+                <span>Axis break: </span>
+                <input id="y-axis-break-field" type="text" value="TODO" />
+              </div>
+              <div class="descriptors">
+                <span class="descriptor">To</span>
+              </div>
+            </div>
+            <div class="row">
+              <button class="enter-btn">Enter</button>
+            </div>
+          </div>
+        </div>
+        <div class="popup regression-popup">
+          <div class="row">
+            <span class="popup-label">Regression</span>
+            <button class="exit-btn">&times;</button>
+          </div>
+          <div class="properties">
+            <div class="property">
+              <div class="row">
+                <span>Type</span>
+                <select id="regression-type-selector">
+                  <option value="auto">Auto</option>
+                  <option value="linear">Linear</option>
+                  <option value="sinusoidal">Sinusoidal</option>
+                  <option value="polynomial">Polynomial</option>
+                  <option value="exponential">Exponential</option>
+                  <option value="logarithmic">Logarithmic</option>
+                </select>
+              </div>
+            </div>
+            <div class="property">
+              <div class="row">
+                <span>Color</span>
+                <select id="regression-line-color-selector">
+                  <option value="black">Black</option>
+                  <option value="white">White</option>
+                  <option value="red">Red</option>
+                  <option value="orange">Orange</option>
+                  <option value="yellow">Yellow</option>
+                  <option value="green">Green</option>
+                  <option value="blue">Blue</option>
+                  <option value="purple">Purple</option>
+                  <option value="custom">Custom</option>
+                </select>
+              </div>
+            </div>
+            <div class="property">
+              <div class="row">
+                <span>Line style</span>
+                <select id="regression-line-style-selector">
+                  <option value="solid">Solid</option>
+                  <option value="dotted">Dotted</option>
+                  <option value="dashed">Dashed</option>
+                </select>
+              </div>
+            </div>
+            <div class="property">
+              <div class="row">
+                <span>Line width: </span>
+                <input id="regression-line-width-field" type="text" />
+              </div>
+              <div class="descriptors">
+                <span class="descriptor">px</span>
+              </div>
+            </div>
+            <div class="row">
+              <button class="enter-btn">Enter</button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="graph-display">
         <script src="graph.js"></script>
       </div>
     </div>
+
     <div class="side-bar">
       <div class="points-side-bar"></div>
       <div class="regressions-side-bar"></div>
