@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saved Graphs</title>
+    <button onclick="window.location.href='home';" class="logout-btn">Home Page</button>
+    <button class="logout-btn" onclick="openPopup()">Logout</button>
+    <div class="popup" id="popup">
+      <h2>Are you sure you want to log out?</h2>
+
+      <button type="button" onclick="closePopup()" class="no-btn">No</button>
+      <button type="button" onclick="logout()" class="yes-btn">Yes</button>
+    </div>
+    <link rel="stylesheet" href="app-pages.css" />
+  </head>
+  <body>
+      <a href="/home" class="small-logo">
+        <img src="RegressionExpert-small-logo.png" alt="RegressionExpert"
+      /></a>
+      <h1 class='main-title'>Load a previously saved graph</h1>
+      <form id='user' action='/saved' method='post'>
+        <input hidden id='username' name='username'>
+        <input hidden id='isOK' name='isOK' value="<%= ok %>">
+      </form>
+      <div>
+        <% for(let i = 0; i < btns.length; i++){ %>
+          <p id="1<%= btns[i].points %>"><%= btns[i].name %></p>
+          <p hidden id='2<%= btns[i].points %>'><%= btns[i].regressions %></p>
+          <button id="<%= btns[i].points %>" onclick="getGraph(this.id)">Load</button>
+        <% }%>
+      </div>
+      
+    <script>
+      
+      let popup = document.getElementById('popup')
+
+      function openPopup(){
+        popup.classList.add('open-popup')
+      }
+
+      function closePopup(){
+        popup.classList.remove('open-popup')
+      }
+
+      function logout(){
+        window.location.href = "index";
+        localStorage.removeItem("username");
+      }
+
+      function getGraph(id){
+        localStorage.setItem("points", id);
+        localStorage.setItem("graph-name", document.getElementById('1'+id).innerText);
+        localStorage.setItem("lines", document.getElementById('2'+id).innerText);
+        window.location.href = "graph-editor";
+      }
+
+      const user = localStorage.getItem("username");
+      let username = document.getElementById("username");
+      username.value = user;
+      let form = document.getElementById('user');
+      form.submit();
+      /*
+      if(user == null){
+        alert("You are not logged in. Please log in first. ");
+        window.location.href = "index";
+      }
+      */
+    </script>
+  </body>
+</html>
