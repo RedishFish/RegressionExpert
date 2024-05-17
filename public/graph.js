@@ -12,9 +12,67 @@ let x_substepPixels, x_stepPixels, y_axisPos, y_substepPixels, y_stepPixels, x_a
 let x_conversionFactor, y_conversionFactor;
 
 let debug = true; //for debug
-
+console
 let points = [];
+
+let pts = [];
+let cur = "";
+let pair = [];
+let id = localStorage.getItem('points');
+if(id != null){
+    for(let i = 0; i < id.length; i++){
+      if(id[i] != '(' && id[i] != ')' && id[i] != ','){
+        cur += id[i];
+      }
+      if(id[i] == ','){
+        pair.push(parseFloat(cur));
+        cur = "";
+      }
+      if(id[i] == '('){
+        if(pair.length != 0){
+          pts.push(pair);
+          pair = [];
+        }
+      }
+    }
+}
+if(pair.length != 0){
+  pts.push(pair);
+  pair = [];
+}
+points = pts;
+
+let titleEl = document.getElementsByClassName("graph-title-input")[0];
+titleEl.value = localStorage.getItem("graph-name");
+document.getElementById('origPoints').value = id;
+document.getElementById('origName').value = titleEl.value;
+
 let lines = [];
+id = localStorage.getItem('lines');
+cur = "";
+pair = [];
+if(id != null){
+    for(let i = 0; i < id.length; i++){
+      if(id[i] != '(' && id[i] != ')' && id[i] != ','){
+        cur += id[i];
+      }
+      if(id[i] == ','){
+        pair.push(parseFloat(cur));
+        cur = "";
+      }
+      if(id[i] == '('){
+        if(pair.length != 0){
+          lines.push({m: pair[0], b: pair[1]});
+          pair = [];
+        }
+      }
+    }
+}
+if(pair.length != 0){
+  lines.push({m: pair[0], b: pair[1]});
+  pair = [];
+}
+
 let selectedPoints = [];
 let selectedLines = [];
 
@@ -239,4 +297,10 @@ function mouseClicked() {
             }
         }
     }
+}
+
+function goHome(){
+    localStorage.removeItem("graph-name");
+    localStorage.removeItem("points");
+    window.location.href = 'home';
 }
