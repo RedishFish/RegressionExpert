@@ -10,7 +10,7 @@
   </head>
   <body>
     <nav class="nav-bar">
-      <a href="/home" class="small-logo">
+      <a onclick="goHome()" class="small-logo">
         <img src="RegressionExpert-small-logo.png" alt="RegressionExpert"
       /></a>
       <form action='/graph-editor' method='post'>
@@ -24,9 +24,11 @@
         <span class="save-status">✓</span>
       </div>
       <div hidden>
-        <input id='user' name='user'></input>
-        <input id='points' name='points'></input>
-        <input id='lines' name='lines'></input>
+        <input id='user' name='user'>
+        <input id='points' name='points'>
+        <input id='lines' name='lines'>
+        <input id='origPoints' name='origPoints'>
+        <input id='origName' name='origName'>
       </div>
       </form>
       <div class="__do-btns">
