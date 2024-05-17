@@ -1,6 +1,6 @@
 // Bug noticed: when scaling the graph, sometimes the last ticks disappear on the axes.
-// Bug: Points plotted offset from cursor - solved, need even diameter
-// Bug: for select feature what if 2 points have the exact same coordinates?
+// Bug: x-scale y-scale does not working if increments are not divisble to the range.
+// Bug: select button does not work rn
 
 let X_STEP = 25;
 let Y_STEP = 25;
@@ -167,6 +167,10 @@ function windowResized() {
 }
 
 function keyPressed() {
+    if(!cursorInCanvas()) {
+        return;
+    }
+
     if(key === 'p') {
         workspaceKeyStatuses['p'] = !workspaceKeyStatuses['p'];
     }
@@ -227,6 +231,10 @@ function keyPressed() {
 function onCanvasClick() {
     //console.log("clicked");
     //plot point
+    if(!cursorInCanvas()) {
+        return;
+    }
+
     if (workspaceKeyStatuses['p']) {
         points.push([X_STEP*((mouseX-y_axisPos)/x_stepPixels), Y_STEP*(-(mouseY-x_axisPos)/y_stepPixels)]);
     }
@@ -282,4 +290,8 @@ function mouseReleased() {
         endDrag_X = 0;
         endDrag_Y = 0;
     }
+}
+
+function cursorInCanvas() {
+    return (mouseX <= width && mouseX >= 0 && mouseY <= height && mouseY >= 0);
 }

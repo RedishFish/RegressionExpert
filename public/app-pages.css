@@ -142,6 +142,7 @@ button:active {
     height: 50px;
     padding: 0;
     margin: auto;
+    border-radius: 10%;
 }
 
 .main-workspace-btns-container > :nth-child(6n) button {
@@ -178,15 +179,15 @@ canvas {
 }
 
 .popup {
+    position: fixed;
     display: none;
     font-size: 12px;
     border: black solid 2px;
+    border-radius: 1.5%;
     width: 200px;
     padding: 20px 10px 10px 10px;
-    opacity: 0.8;
     background-image: linear-gradient(to bottom, rgb(0, 153, 255) 50px, rgb(247, 247, 247) 50px);
 }
-
 
 .popup * {
     font-size: 12px;
@@ -229,7 +230,8 @@ canvas {
     margin-right: auto;
 }
 
-.property input {
+.property input{
+    text-align: center;
     height: 1.5em;
     width: 50px;
     float: right;
@@ -238,6 +240,14 @@ canvas {
     border-bottom: 1px solid black;
     margin-left: 2px;
     background-color: transparent;
+}
+
+.property select{
+    float: right;
+    border: none;
+    border-bottom: 1px solid black;
+    background-color: transparent;
+    padding: 1px;
 }
 
 .descriptors {

@@ -1,4 +1,4 @@
-window.onload = function(){
+window.workspaceButtons = function workspaceButtons() {
     document.getElementById('plot-btn').onclick = function() {
         workspaceKeyStatuses['p'] = !workspaceKeyStatuses['p'];
     };
@@ -18,4 +18,3 @@ window.onload = function(){
         workspaceKeyStatuses['n'] = true;
     };
 }
-
