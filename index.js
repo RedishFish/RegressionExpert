@@ -29,9 +29,6 @@ app.get('/home', (req, res) => {
 app.get('/graph-editor', (req, res) => {
   res.render('graph-editor');
 });
-app.get('/saved', (req, res) => {
-  res.render('saved');
-});
 app.get('/settings', (req, res) => {
   res.render('settings');
 });
@@ -47,6 +44,23 @@ import bodyParser from 'body-parser';
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 const db = new sqlite3.Database('./userDB.sql');
+
+app.get('/saved', (req, res) => {
+  res.render('saved', {btns: [], ok: "Not OK"});
+});
+
+app.post('/saved', (req, res) => {
+  const user = req.body.username;
+  let isOK = req.body.isOK;
+  if(isOK != 'OK'){
+    let sql = "SELECT * FROM "+user+";";
+    db.all(sql, [], (err, ans) => {
+      if(err) throw err;
+      res.render('saved', {btns: ans, ok: 'OK'});
+    });
+  }
+});
+
 // db.run("CREATE TABLE users (username TEXT, pwd TEXT)")
 app.post('/newacc', (req, res) => {
   const user = req.body.user;
@@ -98,9 +112,15 @@ app.post('/graph-editor', (req, res) =>{
   const user = req.body.user;
   const points = req.body.points;
   const lines = req.body.lines;
-  const name = req.body.name;
-  console.log(name);
-  let sql = db.prepare("INSERT INTO "+user+" VALUES (\""+name+"\", \""+points+"\", \""+lines+"\");");
-  sql.run();
-  sql.finalize();
+  const origName = req.body.origName;
+  const origPoints = req.body.origPoints;
+  let name = req.body.name;
+  if(name == "") name = "Untitled Graph";
+  if(points.length != 0){
+    let sql = db.prepare("DELETE FROM "+user+" WHERE name='"+origName+"' AND points='"+origPoints+"';");
+    sql.run();
+    sql = db.prepare("INSERT INTO "+user+" VALUES (\""+name+"\", \""+points+"\", \""+lines+"\");");
+    sql.run();
+    sql.finalize();
+  }
 });
