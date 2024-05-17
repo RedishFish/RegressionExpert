@@ -66,97 +66,8 @@ function draw() {
         drawingContext.restore();
     }
 
-    // Axis lines
-    x_substepPixels = (width-GRAPH_PADDING*2)/((X_RANGE[1]-X_RANGE[0])/X_SUBSTEP);
-    x_stepPixels = (width-GRAPH_PADDING*2)/((X_RANGE[1]-X_RANGE[0])/X_STEP);
-    y_axisPos = GRAPH_PADDING + x_substepPixels*(-X_RANGE[0]/X_SUBSTEP);
-    y_substepPixels = (height-GRAPH_PADDING*2)/((Y_RANGE[1]-Y_RANGE[0])/Y_SUBSTEP);
-    y_stepPixels = (height-GRAPH_PADDING*2)/((Y_RANGE[1]-Y_RANGE[0])/Y_STEP);
-    x_axisPos = GRAPH_PADDING + y_substepPixels*(Y_RANGE[1]/Y_SUBSTEP);
-
-    //console.log("dimensions: " + width + ", " + height);
-    //console.log("origin: " + x_axisPos + ", " + y_axisPos);
-    strokeWeight(2);
-    line(y_axisPos, 0, y_axisPos, height);
-    line(0, x_axisPos, width, x_axisPos);
-
-    // Tick-marks, tick labels, and grid lines 
-    for(let x = GRAPH_PADDING; x <= width-GRAPH_PADDING; x += x_substepPixels){
-        // Grid line
-        stroke(128, 128, 128, 30);
-        strokeWeight(1);
-        line(x, 0, x, height);
-
-        stroke('black');
-        if(Math.round((x-GRAPH_PADDING) % x_stepPixels) == 0 || Math.round((x-GRAPH_PADDING) % x_stepPixels) == Math.round(x_stepPixels)){ //main tick
-            strokeWeight(2);
-            line(x, x_axisPos-10, x, x_axisPos+10);
-            if(Math.abs(x-y_axisPos) > 0.1){
-                strokeWeight(.2);
-                text(X_STEP*Math.round((x-y_axisPos)/x_stepPixels), x, x_axisPos-20);
-            }
-        }
-        else{ //subtick
-            strokeWeight(1);
-            line(x, x_axisPos-5, x, x_axisPos+5);
-        }
-    }
-
-    for(let y = GRAPH_PADDING; y <= height-GRAPH_PADDING; y += y_substepPixels){
-        /**
-        if(debug){
-            console.log(`${y-GRAPH_PADDING}, ${y_stepPixels}, ${Math.round((y-GRAPH_PADDING) % y_stepPixels) % y_stepPixels}`);
-        }**/
-
-        // Grid line
-        stroke(128, 128, 128, 30);
-        strokeWeight(1);
-        line(0, y, width, y);
-
-        stroke('black');
-        if(Math.round((y-GRAPH_PADDING) % y_stepPixels) == 0 || Math.round((y-GRAPH_PADDING) % y_stepPixels) == Math.round(y_stepPixels)){ //main tick
-            strokeWeight(2);
-            line(y_axisPos-10, y, y_axisPos+10, y);
-            if(Math.abs(y-x_axisPos) > 0.1){
-                strokeWeight(.2);
-                text(Y_STEP*Math.round(-(y-x_axisPos)/y_stepPixels), y_axisPos-30, y);
-            }
-        }
-        else{ //subtick
-            strokeWeight(1);
-            line(y_axisPos-5, y, y_axisPos+5, y);
-        }
-    }
-
-    x_conversionFactor = x_stepPixels/X_STEP;
-    y_conversionFactor = y_stepPixels/Y_STEP;
-    // Points
-    for(let point of points){
-        if(selectedPoints.includes(point)) {
-            stroke("red");
-            fill("red");
-            circle(y_axisPos+point[0]*x_conversionFactor, x_axisPos-point[1]*y_conversionFactor, 10);
-        }
-        stroke("black");
-        fill('black');
-        circle(y_axisPos+point[0]*x_conversionFactor, x_axisPos-point[1]*y_conversionFactor, 6);
-    }
-    stroke("black");
-    fill("black");
-
-    // Lines
-    for(let i = 0; i < lines.length; i++){
-        let x_left = X_STEP*((0-y_axisPos)/x_stepPixels);
-        let y_left = lines[i].m*x_left+lines[i].b;
-        let x_right = X_STEP*((width-y_axisPos)/x_stepPixels);
-        let y_right = lines[i].m*x_right+lines[i].b;
-
-        //console.log(x_left, y_left, x_right, y_right, conversionFactor);
-        //console.log(0, y_left*conversionFactor+x_axisPos, width, y_right*conversionFactor+x_axisPos);
-
-        strokeWeight(2);
-        line(0, x_axisPos-y_left*y_conversionFactor, width, x_axisPos-y_right*y_conversionFactor);
-    }
+    drawCartesian();
+    drawPointsAndLines();
     
     debug = false;
 }
@@ -294,4 +205,101 @@ function mouseReleased() {
 
 function cursorInCanvas() {
     return (mouseX <= width && mouseX >= 0 && mouseY <= height && mouseY >= 0);
+}
+
+function drawCartesian() {
+    // Axis lines
+    x_substepPixels = (width-GRAPH_PADDING*2)/((X_RANGE[1]-X_RANGE[0])/X_SUBSTEP);
+    x_stepPixels = (width-GRAPH_PADDING*2)/((X_RANGE[1]-X_RANGE[0])/X_STEP);
+    y_axisPos = GRAPH_PADDING + x_substepPixels*(-X_RANGE[0]/X_SUBSTEP);
+    y_substepPixels = (height-GRAPH_PADDING*2)/((Y_RANGE[1]-Y_RANGE[0])/Y_SUBSTEP);
+    y_stepPixels = (height-GRAPH_PADDING*2)/((Y_RANGE[1]-Y_RANGE[0])/Y_STEP);
+    x_axisPos = GRAPH_PADDING + y_substepPixels*(Y_RANGE[1]/Y_SUBSTEP);
+
+    //console.log("dimensions: " + width + ", " + height);
+    //console.log("origin: " + x_axisPos + ", " + y_axisPos);
+    strokeWeight(2);
+    line(y_axisPos, 0, y_axisPos, height);
+    line(0, x_axisPos, width, x_axisPos);
+
+    // Tick-marks, tick labels, and grid lines 
+    for(let x = GRAPH_PADDING; x <= width-GRAPH_PADDING; x += x_substepPixels){
+        // Grid line
+        stroke(128, 128, 128, 30);
+        strokeWeight(1);
+        line(x, 0, x, height);
+
+        stroke('black');
+        if(Math.round((x-GRAPH_PADDING) % x_stepPixels) == 0 || Math.round((x-GRAPH_PADDING) % x_stepPixels) == Math.round(x_stepPixels)){ //main tick
+            strokeWeight(2);
+            line(x, x_axisPos-10, x, x_axisPos+10);
+            if(Math.abs(x-y_axisPos) > 0.1){
+                strokeWeight(.2);
+                text(X_STEP*Math.round((x-y_axisPos)/x_stepPixels), x, x_axisPos-20);
+            }
+        }
+        else{ //subtick
+            strokeWeight(1);
+            line(x, x_axisPos-5, x, x_axisPos+5);
+        }
+    }
+
+    for(let y = GRAPH_PADDING; y <= height-GRAPH_PADDING; y += y_substepPixels){
+        /**
+        if(debug){
+            console.log(`${y-GRAPH_PADDING}, ${y_stepPixels}, ${Math.round((y-GRAPH_PADDING) % y_stepPixels) % y_stepPixels}`);
+        }**/
+
+        // Grid line
+        stroke(128, 128, 128, 30);
+        strokeWeight(1);
+        line(0, y, width, y);
+
+        stroke('black');
+        if(Math.round((y-GRAPH_PADDING) % y_stepPixels) == 0 || Math.round((y-GRAPH_PADDING) % y_stepPixels) == Math.round(y_stepPixels)){ //main tick
+            strokeWeight(2);
+            line(y_axisPos-10, y, y_axisPos+10, y);
+            if(Math.abs(y-x_axisPos) > 0.1){
+                strokeWeight(.2);
+                text(Y_STEP*Math.round(-(y-x_axisPos)/y_stepPixels), y_axisPos-30, y);
+            }
+        }
+        else{ //subtick
+            strokeWeight(1);
+            line(y_axisPos-5, y, y_axisPos+5, y);
+        }
+    }
+}
+
+function drawPointsAndLines() {
+    x_conversionFactor = x_stepPixels/X_STEP;
+    y_conversionFactor = y_stepPixels/Y_STEP;
+    // Points
+    for(let point of points){
+        if(selectedPoints.includes(point)) {
+            stroke("red");
+            fill("red");
+            circle(y_axisPos+point[0]*x_conversionFactor, x_axisPos-point[1]*y_conversionFactor, 10);
+        }
+        stroke("black");
+        fill('black');
+        circle(y_axisPos+point[0]*x_conversionFactor, x_axisPos-point[1]*y_conversionFactor, 6);
+    }
+    stroke("black");
+    fill("black");
+
+    // Lines
+    for(let i = 0; i < lines.length; i++){
+        let x_left = X_STEP*((0-y_axisPos)/x_stepPixels);
+        let y_left = lines[i].m*x_left+lines[i].b;
+        let x_right = X_STEP*((width-y_axisPos)/x_stepPixels);
+        let y_right = lines[i].m*x_right+lines[i].b;
+
+        //console.log(x_left, y_left, x_right, y_right, conversionFactor);
+        //console.log(0, y_left*conversionFactor+x_axisPos, width, y_right*conversionFactor+x_axisPos);
+
+        strokeWeight(2);
+        line(0, x_axisPos-y_left*y_conversionFactor, width, x_axisPos-y_right*y_conversionFactor);
+    }
+    
 }
