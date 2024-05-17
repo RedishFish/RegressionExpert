@@ -165,11 +165,11 @@ function keyPressed() {
         }
         let pyodideReadyPromise = main();
 
-        let m, b;
+        let m, b, r2;
         async function addPython() {
             let pyodide = await pyodideReadyPromise;
             try {
-                // in this array one can type Python
+                // in this string one can type Python
                 pyodide.globals.set("points", points);
                 let output = pyodide.runPython(`
                     for i in points:
@@ -177,18 +177,24 @@ function keyPressed() {
                         sx = 0
                         sx2 = 0
                         sy = 0
-
+                        res = 0
+                        tot = 0
                         for i in range(len(points)):
                             cp += points[i][0]*points[i][1]
                             sx += points[i][0]
                             sx2 += points[i][0]*points[i][0]
                             sy += points[i][1]
-
+                        
                         m = (len(points)*cp-sx*sy)/(len(points)*sx2-sx*sx)
                         b = (sy/len(points))-m*(sx/len(points))
-                `);
-                m = pyodide.globals.toJs().get("m");
-                b = pyodide.globals.toJs().get("b");
+                        for i in range(len(points)):
+                            res += (m*points[i][0]+b-points[i][1])**2
+                            tot += (points[i][1]-sy/len(points))**2
+                        r2 = 1-res/tot
+                `)
+                m = pyodide.globals.toJs().get('m');
+                b = pyodide.globals.toJs().get('b');
+                r2 = pyodide.globals.toJs().get('r2');
             } catch (err) {
                 alert("Regression Error: " + err);
             }
