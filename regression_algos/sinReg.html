@@ -55,6 +55,7 @@
             cur = 0
             for i in range(x.size):
               cur += (a*np.sin(b*x[i]+c)+d-y[i])**2
+            cur += _*100 # punish very small periods
             if(cur < ans[4]):
               ans = [res[0], res[1], res[2], res[3], cur]
           print([ans[0], ans[1], ans[2], ans[3]])
