@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+  </head>
+  
+  <body>
+    <input id='a'>
+    <input id='b'>
+    <button onclick='addPython()'>Go</button>
+    <p id='c'></p>
+    <p id='d'></p>
+    <script>
+      // init Pyodide
+      async function main() {
+        let pyodide = await loadPyodide();
+        return pyodide;
+      }
+      let pyodideReadyPromise = main();
+
+      async function addPython(){
+        let pyodide = await pyodideReadyPromise;
+        await pyodide.loadPackage("numpy");
+        await pyodide.loadPackage("scipy");
+        try {
+          // in this string one can type Python
+          let output = pyodide.runPython(`
+          import js
+          import numpy as np
+          from scipy.optimize import leastsq
+
+          X = js.document.getElementById('a').value
+          Y = js.document.getElementById('b').value
+          x = X.split()
+          y = Y.split()
+          for i in range(len(x)):
+            x[i] = float(x[i])
+            y[i] = float(y[i])
+          x = np.array(x)
+          y = np.array(y)
+          
+          def getLinReg(x, y): 
+            # formula from Mr. Li's MDM4U workbook.
+            cp = 0 
+            sx = 0
+            sx2 = 0
+            sy = 0
+            for i in range(len(x)):
+              cp += x[i]*y[i]
+              sx += x[i]
+              sx2 += x[i]*x[i]
+              sy += y[i]
+          
+            a = (len(x)*cp-sx*sy)/(len(x)*sx2-sx*sx)
+            b = (sy/len(x))-a*(sx/len(x))
+            return [a, b]
+            
+          yy = []
+          for i in range(y.size):
+            yy.append(y[i])
+          yy = np.array(yy)
+          # the following lines give a good initial guess for a and b
+          for i in range(x.size):
+            y[i] = np.log(y[i])
+            
+          res = getLinReg(x, y)
+          a = np.exp(res[1])
+          b = res[0]
+          c = 0
+          def f(arr):
+            return arr[0]*np.exp(arr[1]*x)+arr[2]-yy
+          # leastsq does Gauss-Newton alg (i.e. gradient descent) for us
+          arr = leastsq(f, [a, b, c])[0]
+          a = arr[0]
+          b = arr[1]
+          c = arr[2]
+
+          js.document.getElementById('c').innerText = (str(a)+"*e^("+str(b)+"x)+"+str(c))
+          `)
+        }
+        catch (err) {
+          console.log(err);
+        }
+      }
+    </script>
+  </body>
+</html>
