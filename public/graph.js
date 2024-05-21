@@ -1,6 +1,7 @@
 // Bug noticed: when scaling the graph, sometimes the last ticks disappear on the axes.
 // Bug: x-scale y-scale does not working if increments are not divisble to the range.
 // Bug: select button does not work rn
+// Hello
 
 let X_STEP = 25;
 let Y_STEP = 25;
