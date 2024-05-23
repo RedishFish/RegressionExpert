@@ -30,7 +30,7 @@ app.get('/graph-editor', (req, res) => {
   res.render('graph-editor');
 });
 app.get('/settings', (req, res) => {
-  res.render('settings');
+  res.render('settings', {msg: "Choose an option to get started: "});
 });
 app.get('/about', (req, res) => {
   res.render('about');
@@ -61,7 +61,7 @@ app.post('/saved', (req, res) => {
   }
 });
 
-// db.run("CREATE TABLE users (username TEXT, pwd TEXT)")
+//db.run("CREATE TABLE users (username TEXT, pwd TEXT)")
 app.post('/newacc', (req, res) => {
   const user = req.body.user;
   const pwd = req.body.pwd;
@@ -78,7 +78,7 @@ app.post('/newacc', (req, res) => {
     }
     catch {
       db.serialize(() => {
-        let stmt = db.prepare("INSERT INTO users VALUES (\""+user+"\", \""+pwd+"\")");
+        let stmt = db.prepare("INSERT INTO users VALUES (\""+user+"\", \""+pwd+"\");");
         stmt.run();
         stmt = db.prepare("CREATE TABLE "+user+" (name TEXT, points TEXT, regressions TEXT);");
         stmt.run();
@@ -123,4 +123,39 @@ app.post('/graph-editor', (req, res) =>{
     sql.run();
     sql.finalize();
   }
+});
+
+app.post('/delete', (req, res) =>{
+  const user = req.body.deluser;
+  const points = req.body.delpts;
+  const graphName = req.body.gname;
+  console.log(points);
+  let sql = db.prepare("DELETE FROM "+user+" WHERE name='"+graphName+"' AND points='"+points+"';");
+  sql.run();
+  sql.finalize();
+  res.render('saved', {btns: [], ok: "Not OK"});
+});
+
+app.post('/changePwd', (req, res) =>{
+  const user = req.body.username;
+  const oldpwd = req.body["old-pwd"];
+  const newpwd = req.body["new-pwd"];
+  const confirm = req.body["confirm-pwd"];
+  let sql = "SELECT pwd FROM users WHERE username = \""+user+"\";";
+  db.all(sql, [], (err, ans) => {
+    if(ans[0].pwd != oldpwd){
+      res.render("settings", {msg: "Incorrect Password!"});
+    }
+    else if(newpwd != confirm){
+      res.render("settings", {msg: "New password and confirmation do not match!"});
+    }
+    else {
+      sql = db.prepare("DELETE FROM users WHERE username='"+user+"';");
+      sql.run();
+      sql = db.prepare("INSERT INTO users VALUES (\""+user+"\", \""+newpwd+"\");");
+      sql.run();
+      sql.finalize();
+      res.render("settings", {msg: "Password change successful."});
+    }
+  });
 });
