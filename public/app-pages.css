@@ -47,6 +47,10 @@ main {
     height: 100%;
 }
 
+.small-logo:hover {
+    cursor: pointer;
+}
+
 button {
     border: 2px solid black;
     font-weight: bold;
@@ -169,7 +173,6 @@ button:active {
 .graph-display {
     overflow: auto;
     border: solid 2px black;
-
 }
 
 canvas {

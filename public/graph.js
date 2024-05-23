@@ -1,13 +1,15 @@
 // Bug noticed: when scaling the graph, sometimes the last ticks disappear on the axes.
 // Bug: x-scale y-scale does not working if increments are not divisble to the range.
 // Bug: select button does not work rn
+// TODO: Fix LN function asymptote
+// TODO: zoom in/out function with button
 
-let X_STEP = 25;
-let Y_STEP = 25;
-let X_SUBSTEP = 5;
-let Y_SUBSTEP = 5;
-let X_RANGE = [-50, 100];
-let Y_RANGE = [-25, 100];
+let X_STEP = 12;
+let Y_STEP = 7;
+let X_SUBSTEP = 3;
+let Y_SUBSTEP = 1;
+let X_RANGE = [-11, 29];
+let Y_RANGE = [-10, 20];
 const GRAPH_PADDING = 20;
 let x_substepPixels,
     x_stepPixels,
@@ -21,18 +23,19 @@ let debug = true; //for debug
 
 let points = [];
 let lines = [];
+
 let selectedPoints = [];
 let selectedLines = [];
 
 let startDrag_X, startDrag_Y, endDrag_X, endDrag_Y;
 
 let workspaceKeyStatuses = {
-    p: false,
-    d: false,
-    s: false,
-    x: false,
-    y: false,
-    n: false,
+    'p': false,
+    'd': false,
+    's': false,
+    'x': false,
+    'y': false,
+    'n': false,
     "ctrl-z": false,
     "ctrl-shift-z": false,
 };
@@ -105,6 +108,7 @@ function setup() {
 function draw() {
     background(245);
 
+/**
     document.getElementById("user").value = localStorage.getItem("username");
     let pointStr = "";
     for (let i = 0; i < points.length; i++) {
@@ -124,6 +128,8 @@ function draw() {
     }
     document.getElementById("points").value = pointStr;
     document.getElementById("lines").value = lineStr;
+**/
+
     onWorkspaceKeyStatuses();
     drawCartesian();
     drawPointsAndLines();
@@ -155,60 +161,10 @@ function keyPressed() {
         workspaceKeyStatuses["s"] = !workspaceKeyStatuses["s"];
         //if(workspaceKeyStatuses['s']) setAllKeysFalseExcept(workspaceKeyStatuses['s']);
     }
-
-    //for testing only - portion copied from linearReg.html
-    if (key === "n") {
-        // init Pyodide
-        async function main() {
-            let pyodide = await loadPyodide();
-            return pyodide;
-        }
-        let pyodideReadyPromise = main();
-
-        let m, b, r2;
-        async function addPython() {
-            let pyodide = await pyodideReadyPromise;
-            try {
-                // in this string one can type Python
-                pyodide.globals.set("points", points);
-                let output = pyodide.runPython(`
-                    for i in points:
-                        cp = 0
-                        sx = 0
-                        sx2 = 0
-                        sy = 0
-                        res = 0
-                        tot = 0
-                        for i in range(len(points)):
-                            cp += points[i][0]*points[i][1]
-                            sx += points[i][0]
-                            sx2 += points[i][0]*points[i][0]
-                            sy += points[i][1]
-                        
-                        m = (len(points)*cp-sx*sy)/(len(points)*sx2-sx*sx)
-                        b = (sy/len(points))-m*(sx/len(points))
-                        for i in range(len(points)):
-                            res += (m*points[i][0]+b-points[i][1])**2
-                            tot += (points[i][1]-sy/len(points))**2
-                        r2 = 1-res/tot
-                `)
-                m = pyodide.globals.toJs().get('m');
-                b = pyodide.globals.toJs().get('b');
-                r2 = pyodide.globals.toJs().get('r2');
-            } catch (err) {
-                alert("Regression Error: " + err);
-            }
-        }
-
-        addPython().then(() => {
-            lines.push({ m: m, b: b });
-        });
-    }
 }
 
 /** Builtin p5js functions **/
 function onCanvasClick() {
-    //console.log("clicked");
     //plot point
     if (!cursorInCanvas()) {
         return;
@@ -244,7 +200,6 @@ function onCanvasClick() {
                 } else {
                     selectedPoints.push(points[i]);
                     pointClicked = true;
-                    //console.log(selectedPoints);
                 }
                 break; //only want to select one point at a time
             }
@@ -293,6 +248,31 @@ function mouseReleased() {
         endDrag_Y = 0;
     }
 }
+
+
+function mouseWheel(event) {
+    if (!cursorInCanvas()){
+        return;
+    }
+
+    console.log(event.delta);
+    let zoomFactor = -event.delta/1000+1;
+
+    X_RANGE[0] = zoomFactor*[X_RANGE[0]-(mouseX-y_axisPos)/x_conversionFactor];
+    X_RANGE[1] = zoomFactor*[X_RANGE[1]-(mouseX-y_axisPos)/x_conversionFactor];
+    Y_RANGE[0] = zoomFactor*[Y_RANGE[0]-(x_axisPos-mouseY)/y_conversionFactor];
+    Y_RANGE[1] = zoomFactor*[Y_RANGE[1]-(x_axisPos-mouseY)/y_conversionFactor];
+    
+    /** Test 
+    X_RANGE[0] = X_RANGE[0]*(1+zoomIndex);
+    X_RANGE[1] = X_RANGE[1]*(1+zoomIndex);
+    Y_RANGE[0] = Y_RANGE[0]*(1+zoomIndex);
+    Y_RANGE[1] = Y_RANGE[1]*(1+zoomIndex);
+    **/
+
+
+}
+
 /** END Builtin p5js functions **/
 
 /** HELPER FUNCTIONS for p5js draw() **/
@@ -313,23 +293,21 @@ function drawCartesian() {
     x_substepPixels =
         (width - GRAPH_PADDING * 2) / ((X_RANGE[1] - X_RANGE[0]) / X_SUBSTEP);
     x_stepPixels =
-        (width - GRAPH_PADDING * 2) / ((X_RANGE[1] - X_RANGE[0]) / X_STEP);
+        x_substepPixels * (X_STEP / X_SUBSTEP);
     y_axisPos = GRAPH_PADDING + x_substepPixels * (-X_RANGE[0] / X_SUBSTEP);
     y_substepPixels =
         (height - GRAPH_PADDING * 2) / ((Y_RANGE[1] - Y_RANGE[0]) / Y_SUBSTEP);
     y_stepPixels =
-        (height - GRAPH_PADDING * 2) / ((Y_RANGE[1] - Y_RANGE[0]) / Y_STEP);
+        y_substepPixels * (Y_STEP / Y_SUBSTEP);
     x_axisPos = GRAPH_PADDING + y_substepPixels * (Y_RANGE[1] / Y_SUBSTEP);
 
-    //console.log("dimensions: " + width + ", " + height);
-    //console.log("origin: " + x_axisPos + ", " + y_axisPos);
     strokeWeight(2);
     line(y_axisPos, 0, y_axisPos, height);
     line(0, x_axisPos, width, x_axisPos);
 
     // Tick-marks, tick labels, and grid lines
     for (
-        let x = GRAPH_PADDING;
+        let x = y_axisPos - Math.floor((-X_RANGE[0])/X_SUBSTEP)*x_substepPixels;
         x <= width - GRAPH_PADDING;
         x += x_substepPixels
     ) {
@@ -340,9 +318,8 @@ function drawCartesian() {
 
         stroke("black");
         if (
-            Math.round((x - GRAPH_PADDING) % x_stepPixels) == 0 ||
-            Math.round((x - GRAPH_PADDING) % x_stepPixels) ==
-                Math.round(x_stepPixels)
+            Math.abs(y_axisPos - x) % x_stepPixels < 0.1 ||
+            x_stepPixels - Math.abs(y_axisPos - x) % x_stepPixels < 0.1
         ) {
             //main tick
             strokeWeight(2);
@@ -350,7 +327,7 @@ function drawCartesian() {
             if (Math.abs(x - y_axisPos) > 0.1) {
                 strokeWeight(0.2);
                 text(
-                    X_STEP * Math.round((x - y_axisPos) / x_stepPixels),
+                    Math.round(X_STEP * ((x - y_axisPos) / x_stepPixels)), // Changed
                     x,
                     x_axisPos - 20,
                 );
@@ -363,7 +340,7 @@ function drawCartesian() {
     }
 
     for (
-        let y = GRAPH_PADDING;
+        let y = x_axisPos - Math.floor((Y_RANGE[1])/Y_SUBSTEP)*y_substepPixels;
         y <= height - GRAPH_PADDING;
         y += y_substepPixels
     ) {
@@ -379,9 +356,8 @@ function drawCartesian() {
 
         stroke("black");
         if (
-            Math.round((y - GRAPH_PADDING) % y_stepPixels) == 0 ||
-            Math.round((y - GRAPH_PADDING) % y_stepPixels) ==
-                Math.round(y_stepPixels)
+            Math.abs(x_axisPos - y) % y_stepPixels < 0.1 ||
+            y_stepPixels - Math.abs(x_axisPos - y) % y_stepPixels < 0.1
         ) {
             //main tick
             strokeWeight(2);
@@ -389,7 +365,7 @@ function drawCartesian() {
             if (Math.abs(y - x_axisPos) > 0.1) {
                 strokeWeight(0.2);
                 text(
-                    Y_STEP * Math.round(-(y - x_axisPos) / y_stepPixels),
+                    Math.round(Y_STEP * (-(y - x_axisPos) / y_stepPixels)), // Changed
                     y_axisPos - 30,
                     y,
                 );
@@ -429,21 +405,10 @@ function drawPointsAndLines() {
 
     // Lines
     for (let i = 0; i < lines.length; i++) {
-        let x_left = X_STEP * ((0 - y_axisPos) / x_stepPixels);
-        let y_left = lines[i].m * x_left + lines[i].b;
-        let x_right = X_STEP * ((width - y_axisPos) / x_stepPixels);
-        let y_right = lines[i].m * x_right + lines[i].b;
-
         //console.log(x_left, y_left, x_right, y_right, conversionFactor);
         //console.log(0, y_left*conversionFactor+x_axisPos, width, y_right*conversionFactor+x_axisPos);
-
         strokeWeight(2);
-        line(
-            0,
-            x_axisPos - y_left * y_conversionFactor,
-            width,
-            x_axisPos - y_right * y_conversionFactor,
-        );
+        sketchFunction(lines[i], lines[i].type, 2);
     }
 }
 
@@ -483,4 +448,83 @@ function goHome() {
     localStorage.removeItem("graph-name");
     localStorage.removeItem("points");
     window.location.href = "home";
+}
+
+function sketchFunction(line__, type, detailNumber) {
+    // Simply draw a line if it is a linear function
+    if(type == "linear"){
+        let x_left = X_STEP * ((0 - y_axisPos) / x_stepPixels);
+        let y_left = line__.m * x_left + line__.b;
+        let x_right = X_STEP * ((width - y_axisPos) / x_stepPixels);
+        let y_right = line__.m * x_right + line__.b;
+
+        line(
+            0,
+            x_axisPos - y_left * y_conversionFactor,
+            width,
+            x_axisPos - y_right * y_conversionFactor,
+        );
+
+        strokeWeight(0.5);
+        textAlign(LEFT);
+        text(line__.string, 10, x_axisPos - y_left * y_conversionFactor + 10);
+        strokeWeight(2);
+        textAlign(CENTER);
+
+        return;
+    }
+
+    // Otherwise draw a lot of small lines continuously to simulate a curved function
+    if(type == "logarithmic"){
+
+        y_left = Math.log((x_left-line__.C)/line__.A)/line__.B;
+        y_right = Math.log((x_right-line__.C)/line__.A)/line__.B;
+        line(
+            x,
+            x_axisPos - y_left * y_conversionFactor,
+            x+detailNumber,
+            x_axisPos - y_right * y_conversionFactor,
+        );
+        return;
+    }
+
+    else{
+        for(let x = 0; x <= width+detailNumber; x+=detailNumber){ 
+            let x_left = X_STEP * ((x - y_axisPos) / x_stepPixels);
+            let x_right = X_STEP * ((x+detailNumber - y_axisPos) / x_stepPixels);
+            
+            let y_left = 0;
+            let y_right = 0;
+    
+            if(type == "polynomial"){
+                for(let j = 0; j < line__.coeff.length; j++){
+                    y_left += line__.coeff[j]*(x_left**j);
+                    y_right += line__.coeff[j]*(x_right**j);
+                }
+            }
+            else if(type == "sinusoidal"){
+                y_left = line__.A*Math.sin(line__.B*x_left+line__.C)+line__.D;
+                y_right = line__.A*Math.sin(line__.B*x_right+line__.C)+line__.D;
+            }
+            else if(type == "exponential"){
+                y_left = line__.A*(Math.E**(line__.B*x_left))+line__.C;
+                y_right = line__.A*(Math.E**(line__.B*x_right))+line__.C;
+            }
+            
+            line(
+                x,
+                x_axisPos - y_left * y_conversionFactor,
+                x+detailNumber,
+                x_axisPos - y_right * y_conversionFactor,
+            );
+            if(x === 0){
+                strokeWeight(0.5);
+                textAlign(LEFT);
+                text(line__.string, 10, x_axisPos - y_left * y_conversionFactor + 10);
+                strokeWeight(2);
+                textAlign(CENTER);
+            }
+        }
+    }
+    
 }
