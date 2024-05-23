@@ -1,7 +1,8 @@
-import express from 'express';
-import sqlite3 from 'sqlite3';
+const express = require('express');
+const sqlite3 = require('sqlite3');
 const app = express();
-import ejs from 'ejs';
+
+const ejs = require('ejs');
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
@@ -40,7 +41,7 @@ app.listen(3000, () => {
   console.log('Express server initiated.');
 });
 
-import bodyParser from 'body-parser';
+const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 const db = new sqlite3.Database('./userDB.sql');
