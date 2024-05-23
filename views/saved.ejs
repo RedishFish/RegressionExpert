@@ -29,9 +29,16 @@
           <p id="1<%= btns[i].points %>"><%= btns[i].name %></p>
           <p hidden id='2<%= btns[i].points %>'><%= btns[i].regressions %></p>
           <button id="<%= btns[i].points %>" onclick="getGraph(this.id)">Load</button>
+          <button id="3<%= btns[i].points %>" onclick="delGraph(this.id)">Delete</button>
         <% }%>
       </div>
-
+      <div hidden>
+        <form id='del' action='/delete' method='post'>
+          <input id='deluser' name='deluser'>
+          <input id='delpts' name='delpts'>
+          <input id='gname' name='gname'>
+        </form>
+      </div>
     <script>
 
       let popup = document.getElementById('popup')
@@ -56,6 +63,16 @@
         window.location.href = "graph-editor";
       }
 
+      function delGraph(id){
+        id = id.substring(1);
+        document.getElementById("delpts").value = id;
+        const user = localStorage.getItem("username");
+        document.getElementById("deluser").value = user;
+        document.getElementById('gname').value = document.getElementById('1'+id).innerText;
+        let form = document.getElementById('del');
+        form.submit();
+      }
+
       const user = localStorage.getItem("username");
       let username = document.getElementById("username");
       username.value = user;
@@ -69,6 +86,8 @@
         alert("You are not logged in. Please log in first. ");
         window.location.href = "index";
       }
+
+
     </script>
   </body>
 </html>
