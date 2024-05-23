@@ -28,6 +28,7 @@ let selectedPoints = [];
 let selectedLines = [];
 
 let startDrag_X, startDrag_Y, endDrag_X, endDrag_Y;
+let toDrag = false;
 
 let workspaceKeyStatuses = {
     'p': false,
@@ -98,7 +99,7 @@ if (pair.length != 0) {
 }
 
 function setup() {
-    let canvas = createCanvas(windowWidth * 0.75, windowHeight - 200);
+    let canvas = createCanvas(windowWidth * 0.75, windowHeight - 300);
     canvas.mousePressed(onCanvasClick);
 
     background(245);
@@ -161,6 +162,11 @@ function keyPressed() {
         workspaceKeyStatuses["s"] = !workspaceKeyStatuses["s"];
         //if(workspaceKeyStatuses['s']) setAllKeysFalseExcept(workspaceKeyStatuses['s']);
     }
+
+    if(key === "c") {
+        lines = [];
+        points = [];
+    }
 }
 
 /** Builtin p5js functions **/
@@ -207,6 +213,14 @@ function onCanvasClick() {
         if (!pointClicked) {
             //deselect all points if clicked on empty space
             selectedPoints = [];
+
+            //in case if user wanted to drag the canvas
+            startDrag_X = mouseX;
+            startDrag_Y = mouseY;
+            toDrag = true;
+        }
+        else {
+            toDrag = false;
         }
     }
 }
@@ -219,6 +233,23 @@ function mouseDragged() {
     if (workspaceKeyStatuses["s"]) {
         endDrag_X = mouseX;
         endDrag_Y = mouseY;
+    }
+    else{
+        console.log(toDrag, keysInterfered())
+        if(toDrag && !keysInterfered()){
+            endDrag_X = mouseX;
+            endDrag_Y = mouseY;
+            delta_X_pixels = -(endDrag_X-startDrag_X);
+            delta_Y_pixels = -(endDrag_Y-startDrag_Y);
+            delta_X = delta_X_pixels / x_conversionFactor;
+            delta_Y = -delta_Y_pixels / y_conversionFactor;
+    
+            X_RANGE = [X_RANGE[0] + delta_X, X_RANGE[1] + delta_X];
+            Y_RANGE = [Y_RANGE[0] + delta_Y, Y_RANGE[1] + delta_Y];
+    
+            startDrag_X = endDrag_X;
+            startDrag_Y = endDrag_Y;
+        }
     }
 }
 
@@ -256,21 +287,12 @@ function mouseWheel(event) {
     }
 
     console.log(event.delta);
-    let zoomFactor = -event.delta/1000+1;
+    let zoomFactor = -event.delta/1000;
 
-    X_RANGE[0] = zoomFactor*[X_RANGE[0]-(mouseX-y_axisPos)/x_conversionFactor];
-    X_RANGE[1] = zoomFactor*[X_RANGE[1]-(mouseX-y_axisPos)/x_conversionFactor];
-    Y_RANGE[0] = zoomFactor*[Y_RANGE[0]-(x_axisPos-mouseY)/y_conversionFactor];
-    Y_RANGE[1] = zoomFactor*[Y_RANGE[1]-(x_axisPos-mouseY)/y_conversionFactor];
-    
-    /** Test 
-    X_RANGE[0] = X_RANGE[0]*(1+zoomIndex);
-    X_RANGE[1] = X_RANGE[1]*(1+zoomIndex);
-    Y_RANGE[0] = Y_RANGE[0]*(1+zoomIndex);
-    Y_RANGE[1] = Y_RANGE[1]*(1+zoomIndex);
-    **/
-
-
+    X_RANGE[0] = zoomFactor*[X_RANGE[0]-(mouseX-y_axisPos)/x_conversionFactor]+X_RANGE[0];
+    X_RANGE[1] = zoomFactor*[X_RANGE[1]-(mouseX-y_axisPos)/x_conversionFactor]+X_RANGE[1];
+    Y_RANGE[0] = zoomFactor*[Y_RANGE[0]-(x_axisPos-mouseY)/y_conversionFactor]+Y_RANGE[0];
+    Y_RANGE[1] = zoomFactor*[Y_RANGE[1]-(x_axisPos-mouseY)/y_conversionFactor]+Y_RANGE[1];
 }
 
 /** END Builtin p5js functions **/
@@ -280,12 +302,21 @@ function cursorInCanvas() {
     return mouseX <= width && mouseX >= 0 && mouseY <= height && mouseY >= 0;
 }
 
-function setAllKeysFalseExcept(exceptedKey) {
+function setAllKeysFalseExcept(exceptedKey) { // probably not needed anymore?
     for (let key of Object.keys(workspaceKeyStatuses)) {
         if (key != exceptedKey) {
             workspaceKeyStatuses[key] = false;
         }
     }
+}
+
+function keysInterfered() {
+    for (let key of Object.keys(workspaceKeyStatuses)) {
+        if(workspaceKeyStatuses[key]) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function drawCartesian() {
