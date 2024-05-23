@@ -72,6 +72,9 @@
       }
 
       const user = localStorage.getItem("username");
+      localStorage.removeItem("graph-name");
+      localStorage.removeItem("points");
+      localStorage.removeItem("lines");
       if(user == null){
         alert("You are not logged in. Please log in first. ");
         window.location.href = "index";
