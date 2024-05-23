@@ -75,31 +75,66 @@ document.getElementById("origName").value = titleEl.value;
 
 id = localStorage.getItem("lines");
 cur = "";
-pair = [];
+let num = ""
+let nxt = [];
+
+let curtype = "o";
 if (id != null) {
     for (let i = 0; i < id.length; i++) {
-        if (id[i] != "(" && id[i] != ")" && id[i] != ",") {
-            cur += id[i];
-        }
-        if (id[i] == ",") {
-            pair.push(parseFloat(cur));
-            cur = "";
-        }
-        if (id[i] == "(") {
-            if (pair.length != 0) {
-                lines.push({ m: pair[0], b: pair[1] });
-                pair = [];
+        if(id[i] == 'l' || id[i] == 'p' || id[i] == 's' || id[i] == 'e' || id[i] == 'g'){
+            if(curtype == 'l'){
+                lines.push({"type": "linear", "m": nxt[0], "b": nxt[1], "string": `y = ${nxt[0].toFixed(2)}x + ${nxt[1].toFixed(2)}`});
             }
+            if(curtype == 'p'){
+                let res = `${nxt[0].toFixed(2)}`;
+                for(let i = 1; i < nxt.length; i++){
+                    res = `${nxt[i].toFixed(2)}x^${i} + ${res}`
+                }
+                lines.push({"type": "polynomial", "coeff": nxt, "string": res});
+            }
+            if(curtype == 's'){
+                lines.push({"type": "sinusoidal", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], 'D': nxt[3], "string": `${nxt[0].toFixed(2)}sin(${nxt[1].toFixed(2)}x + ${nxt[2].toFixed(2)}) + ${nxt[3].toFixed(2)}`});
+            }
+            if(curtype == 'e'){
+                lines.push({"type": "exponential", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], "string": `${nxt[0].toFixed(2)}(${(Math.E**nxt[1]).toFixed(2)}^x) + ${nxt[2].toFixed(2)}`});
+            }
+            if(curtype == 'g'){
+                lines.push({"type": "logarithmic", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], "string": `ln((x-${nxt[2].toFixed(2)}) / ${nxt[0].toFixed(2)}) / ${nxt[1].toFixed(2)}`});
+            }
+            nxt = [];
+            curtype = id[i];
         }
+        else if(id[i] == '|'){
+            nxt.push(parseFloat(num));
+            num = "";
+        }
+        else num += id[i];
     }
 }
-if (pair.length != 0) {
-    lines.push({ m: pair[0], b: pair[1] });
-    pair = [];
+
+if(curtype == 'l'){
+    lines.push({"type": "linear", "m": nxt[0], "b": nxt[1], "string": `y = ${nxt[0].toFixed(2)}x + ${nxt[1].toFixed(2)}`});
 }
+if(curtype == 'p'){
+    let res = `${nxt[0].toFixed(2)}`;
+    for(let i = 1; i < nxt.length; i++){
+        res = `${nxt[i].toFixed(2)}x^${i} + ${res}`
+    }
+    lines.push({"type": "polynomial", "coeff": nxt, "string": res});
+}
+if(curtype == 's'){
+    lines.push({"type": "sinusoidal", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], 'D': nxt[3], "string": `${nxt[0].toFixed(2)}sin(${nxt[1].toFixed(2)}x + ${nxt[2].toFixed(2)}) + ${nxt[3].toFixed(2)}`});
+}
+if(curtype == 'e'){
+    lines.push({"type": "exponential", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], "string": `${nxt[0].toFixed(2)}(${(Math.E**nxt[1]).toFixed(2)}^x) + ${nxt[2].toFixed(2)}`});
+}
+if(curtype == 'g'){
+    lines.push({"type": "logarithmic", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], "string": `ln((x-${nxt[2].toFixed(2)}) / ${nxt[0].toFixed(2)}) / ${nxt[1].toFixed(2)}`});
+}
+console.log(lines);
 
 function setup() {
-    let canvas = createCanvas(windowWidth * 0.75, windowHeight - 300);
+    let canvas = createCanvas(windowWidth * 0.75, windowHeight - 200);
     canvas.mousePressed(onCanvasClick);
 
     background(245);
@@ -109,8 +144,7 @@ function setup() {
 function draw() {
     background(245);
 
-/**
-    document.getElementById("user").value = localStorage.getItem("username");
+document.getElementById("user").value = localStorage.getItem("username");
     let pointStr = "";
     for (let i = 0; i < points.length; i++) {
         pointStr += "(";
@@ -119,18 +153,55 @@ function draw() {
         pointStr += points[i][1].toFixed(2);
         pointStr += "),";
     }
+
     let lineStr = "";
-    for (let i = 0; i < lines.length; i++) {
-        lineStr += "(";
-        lineStr += lines[i]["m"].toFixed(2);
-        lineStr += ",";
-        lineStr += lines[i]["b"].toFixed(2);
-        lineStr += "),";
+    for (let i = 0; i < lines.length; i++){
+        if(lines[i].type == "linear"){
+            lineStr += "l";
+            lineStr += lines[i].m.toFixed(2).toString();
+            lineStr += "|";
+            lineStr += lines[i].b.toFixed(2).toString();
+            lineStr += "|";
+        }
+        if(lines[i].type == "polynomial"){
+            lineStr += 'p';
+            for(let j = 0; j < lines[i].coeff.length; j++){
+                lineStr += lines[i].coeff[j].toFixed(2).toString();
+                lineStr += "|";
+            }
+        }
+        if(lines[i].type == "sinusoidal"){
+            lineStr += 's';
+            lineStr += lines[i].A.toFixed(2).toString();
+            lineStr += '|';
+            lineStr += lines[i].B.toFixed(2).toString();
+            lineStr += '|';
+            lineStr += lines[i].C.toFixed(2).toString();
+            lineStr += '|';
+            lineStr += lines[i].D.toFixed(2).toString();
+            lineStr += "|";
+        }
+        if(lines[i].type == 'exponential'){
+            lineStr += 'e';
+            lineStr += lines[i].A.toFixed(2).toString();
+            lineStr += '|';
+            lineStr += lines[i].B.toFixed(2).toString();
+            lineStr += '|';
+            lineStr += lines[i].C.toFixed(2).toString();
+            lineStr += "|";
+        }
+        if(lines[i].type == 'logarithmic'){
+            lineStr += 'g';
+            lineStr += lines[i].A.toFixed(2).toString();
+            lineStr += '|';
+            lineStr += lines[i].B.toFixed(2).toString();
+            lineStr += '|';
+            lineStr += lines[i].C.toFixed(2).toString();
+            lineStr += "|";
+        }
     }
     document.getElementById("points").value = pointStr;
     document.getElementById("lines").value = lineStr;
-**/
-
     onWorkspaceKeyStatuses();
     drawCartesian();
     drawPointsAndLines();
