@@ -19,17 +19,11 @@
       /></a>
       <h1 class='main-title'>Settings</h1>
       <div class='settings-list'>
-        <p>Enter current password:</p>
-        <input>
-        <p>Enter new password:</p>
-        <input>
-        <p>Confirm new password:</p>
-        <input>
-        <button onclick="change()">Change</button>
+        <%= msg %>
       </div>
       <button onclick="getAccSettings()">Account Settings</button><br>
-      <button>Visuals/GUI</button><br>
-      <button>Change Password</button><br>
+      <button onclick="getGUI()">Visuals/GUI</button><br>
+      <button onclick="changePwd()">Change Password</button><br>
     <button onclick="window.location.href='home';">Home Page</button>
     <script>
       let popup = document.getElementById('popup')
@@ -47,13 +41,55 @@
         localStorage.removeItem("username");
       }
 
-      function change(){
-        
+      function getAccSettings(){
+        let box = document.getElementsByClassName("settings-list")[0];
+
       }
 
-      function getAccSettings(){
-        let box = document.getElementsByClassName("settings-list");
-        
+      function getGUI(){
+        let box = document.getElementsByClassName("settings-list")[0];
+      }
+      
+      function changePwd(){
+        let frame = document.getElementsByClassName("settings-list")[0];
+        while(frame.hasChildNodes()){
+          frame.removeChild(frame.firstChild);
+        }
+        let box = document.createElement("form");
+        box.action = "/changePwd";
+        box.method = "post";
+        let pEl = document.createElement("p");
+        pEl.innerText = "Enter Current Password: ";
+        box.appendChild(pEl);
+        let inputEl = document.createElement("input");
+        inputEl.id = "old-pwd";
+        inputEl.name = "old-pwd";
+        box.appendChild(inputEl);
+        pEl = document.createElement("p");
+        pEl.innerText = "Enter New Password: ";
+        box.appendChild(pEl);
+        inputEl = document.createElement("input");
+        inputEl.id = "new-pwd";
+        inputEl.name = "new-pwd";
+        box.appendChild(inputEl);
+        pEl = document.createElement("p");
+        pEl.innerText = "Confirm New Password: ";
+        box.appendChild(pEl);
+        inputEl = document.createElement("input");
+        inputEl.id = "confirm-pwd";
+        inputEl.name = "confirm-pwd";
+        box.appendChild(inputEl);
+        let buttonEl = document.createElement("button");
+        buttonEl.innerText = "Change";
+        buttonEl.type = "submit";
+        box.appendChild(buttonEl);
+        inputEl = document.createElement("input");
+        inputEl.id = "username";
+        inputEl.name = "username";
+        inputEl.value = localStorage.getItem("username");
+        inputEl.style.display = "none";
+        box.appendChild(inputEl);
+        frame.appendChild(box);
       }
       /*
       const user = localStorage.getItem("username");
@@ -65,4 +101,3 @@
     </script>
   </body>
 </html>
-
