@@ -275,6 +275,14 @@ function onCanvasClick() {
             X_STEP * ((mouseX - y_axisPos) / x_stepPixels),
             Y_STEP * (-(mouseY - x_axisPos) / y_stepPixels),
         ]);
+        pi = []; li = [];
+        for(let _ = 0; _ < points.length; _++){
+            pi.push(points[_]);
+        }
+        for(let _ = 0; _ < lines.length; _++){
+            li.push(lines[_]);
+        }
+        stack.push({l: li, p: pi});
     } else if (workspaceKeyStatuses["s"]) {
         startDrag_X = mouseX;
         startDrag_Y = mouseY;
@@ -548,6 +556,14 @@ function onWorkspaceKeyStatuses() {
         for (let i = 0; i < selectedPoints.length; i++) {
             points.splice(points.indexOf(selectedPoints[i]), 1);
         }
+        pi = []; li = [];
+        for(let _ = 0; _ < points.length; _++){
+            pi.push(points[_]);
+        }
+        for(let _ = 0; _ < lines.length; _++){
+            li.push(lines[_]);
+        }
+        stack.push({l: li, p: pi});
         selectedPoints = [];
         workspaceKeyStatuses["d"] = false;
     }
