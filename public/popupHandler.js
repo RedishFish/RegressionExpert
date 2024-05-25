@@ -124,6 +124,14 @@ function regressionBtnHandler() {
                     let m = pyodide.globals.toJs().get('m');
                     let b = pyodide.globals.toJs().get('b');
                     lines.push({"type": "linear", "m": m, "b": b, "string": `y = ${m.toFixed(2)}x + ${b.toFixed(2)}`});
+                    pi = []; li = [];
+                    for(let _ = 0; _ < points.length; _++){
+                        pi.push(points[_]);
+                    }
+                    for(let _ = 0; _ < lines.length; _++){
+                        li.push(lines[_]);
+                    }
+                    stack.push({l: li, p: pi});
                     return;
                 }
                 if(regressionType == "polynomial"){ 
@@ -179,6 +187,14 @@ function regressionBtnHandler() {
                     }
 
                     lines.push({"type": "polynomial", "coeff": coeff, "string": res});
+                    pi = []; li = [];
+                    for(let _ = 0; _ < points.length; _++){
+                        pi.push(points[_]);
+                    }
+                    for(let _ = 0; _ < lines.length; _++){
+                        li.push(lines[_]);
+                    }
+                    stack.push({l: li, p: pi});
                     return;
                 }
                 if(regressionType == "sinusoidal"){
@@ -218,7 +234,14 @@ function regressionBtnHandler() {
                     `);
                     let ans = pyodide.globals.toJs().get("ans");
                     lines.push({"type": "sinusoidal", 'A': ans[0], 'B': ans[1], 'C': ans[2], 'D': ans[3], "string": `${ans[0].toFixed(2)}sin(${ans[1].toFixed(2)}x + ${ans[2].toFixed(2)}) + ${ans[3].toFixed(2)}`});
-                    
+                    pi = []; li = [];
+                    for(let _ = 0; _ < points.length; _++){
+                        pi.push(points[_]);
+                    }
+                    for(let _ = 0; _ < lines.length; _++){
+                        li.push(lines[_]);
+                    }
+                    stack.push({l: li, p: pi});
                     return;
                 }
                 if(regressionType == "exponential"){
@@ -276,6 +299,14 @@ function regressionBtnHandler() {
                     `);
                     let ans = pyodide.globals.toJs().get("ans");
                     lines.push({"type": "exponential", 'A': ans[0], 'B': ans[1], 'C': ans[2], "string": `${ans[0].toFixed(2)}(${(Math.E**ans[1]).toFixed(2)}^x) + ${ans[2].toFixed(2)}`});
+                    pi = []; li = [];
+                    for(let _ = 0; _ < points.length; _++){
+                        pi.push(points[_]);
+                    }
+                    for(let _ = 0; _ < lines.length; _++){
+                        li.push(lines[_]);
+                    }
+                    stack.push({l: li, p: pi});
                     return;
                 }
                 if(regressionType == "logarithmic"){
@@ -333,7 +364,14 @@ function regressionBtnHandler() {
                     `);
                     let ans = pyodide.globals.toJs().get("ans");
                     lines.push({"type": "logarithmic", 'A': ans[0], 'B': ans[1], 'C': ans[2], "string": `ln((x-${ans[2].toFixed(2)}) / ${ans[0].toFixed(2)}) / ${ans[1].toFixed(2)}`});
-                    console.log(lines[lines.length-1].string);
+                    pi = []; li = [];
+                    for(let _ = 0; _ < points.length; _++){
+                        pi.push(points[_]);
+                    }
+                    for(let _ = 0; _ < lines.length; _++){
+                        li.push(lines[_]);
+                    }
+                    stack.push({l: li, p: pi});
                     return;
                 }
                 if(regressionType == "auto"){
