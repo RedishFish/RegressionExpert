@@ -283,6 +283,7 @@ function onCanvasClick() {
             li.push(lines[_]);
         }
         stack.push({l: li, p: pi});
+        dump = [];
     } else if (workspaceKeyStatuses["s"]) {
         startDrag_X = mouseX;
         startDrag_Y = mouseY;
@@ -564,6 +565,7 @@ function onWorkspaceKeyStatuses() {
             li.push(lines[_]);
         }
         stack.push({l: li, p: pi});
+        dump = [];
         selectedPoints = [];
         workspaceKeyStatuses["d"] = false;
     }
