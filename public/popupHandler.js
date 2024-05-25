@@ -132,6 +132,7 @@ function regressionBtnHandler() {
                         li.push(lines[_]);
                     }
                     stack.push({l: li, p: pi});
+                    dump = [];
                     return;
                 }
                 if(regressionType == "polynomial"){ 
@@ -195,6 +196,7 @@ function regressionBtnHandler() {
                         li.push(lines[_]);
                     }
                     stack.push({l: li, p: pi});
+                    dump = [];
                     return;
                 }
                 if(regressionType == "sinusoidal"){
@@ -242,6 +244,7 @@ function regressionBtnHandler() {
                         li.push(lines[_]);
                     }
                     stack.push({l: li, p: pi});
+                    dump = [];
                     return;
                 }
                 if(regressionType == "exponential"){
@@ -307,6 +310,7 @@ function regressionBtnHandler() {
                         li.push(lines[_]);
                     }
                     stack.push({l: li, p: pi});
+                    dump = [];
                     return;
                 }
                 if(regressionType == "logarithmic"){
@@ -372,6 +376,7 @@ function regressionBtnHandler() {
                         li.push(lines[_]);
                     }
                     stack.push({l: li, p: pi});
+                    dump = [];
                     return;
                 }
                 if(regressionType == "auto"){
