@@ -141,6 +141,29 @@ function setup() {
     textAlign(CENTER, CENTER);
 }
 
+let stack = [], dump = [];
+let pi = [], li = [];
+for(let _ = 0; _ < points.length; _++){
+    pi.push(points[_]);
+}
+for(let _ = 0; _ < lines.length; _++){
+    li.push(lines[_]);
+}
+stack.push({l: li, p: pi});
+function undo(){
+    if(stack.length == 1) return;
+    dump.push(stack.pop());
+    lines = stack[stack.length-1].l;
+    points = stack[stack.length-1].p;
+}
+
+function redo(){
+    if(dump.length == 0) return;
+    stack.push(dump.pop());
+    lines = stack[stack.length-1].l;
+    points = stack[stack.length-1].p;
+}
+
 function draw() {
     background(245);
 
