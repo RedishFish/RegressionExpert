@@ -1,7 +1,7 @@
 //TODO: Allow different degree for polynomial
 //BUG:Sin issue and logarithmic not working for negative x-vals
 
-window.popupHandler = function popupHandler() {
+window.mainWorkspaceHandler = function mainWorkspaceHandler() {
     x_scaleBtnHandler();
     y_scaleBtnHandler();
     regressionBtnHandler();
@@ -95,10 +95,15 @@ function regressionBtnHandler() {
 
     regressionEnterBtn.addEventListener("click", function() {
         let regressionType = document.getElementById("regression-type-selector").value;
+        //console.log(regressionType);
 
         async function addPython() {
             try {
                 pyodide.globals.set("points", points);
+                pyodide.runPython(`
+                    points = [pt for pt in points if not math.isnan(pt[0]) and not math.isnan(pt[1])]
+                `);
+
                 if(regressionType == "linear"){
                     pyodide.runPython(`
                         for i in points:
@@ -123,7 +128,8 @@ function regressionBtnHandler() {
                     `);
                     let m = pyodide.globals.toJs().get('m');
                     let b = pyodide.globals.toJs().get('b');
-                    lines.push({"type": "linear", "m": m, "b": b, "string": `y = ${m.toFixed(2)}x + ${b.toFixed(2)}`});
+                    lines.push({"type": "linear", "m": m, "b": b, "string": `y = ${m.toPrecision(4)}x + ${b.toPrecision(4)}`});
+
                     pi = []; li = [];
                     for(let _ = 0; _ < points.length; _++){
                         pi.push(points[_]);
@@ -133,10 +139,9 @@ function regressionBtnHandler() {
                     }
                     stack.push({l: li, p: pi});
                     dump = [];
-                    return;
                 }
-                if(regressionType == "polynomial"){ 
-                    pyodide.globals.set("ord", 3);
+                else if(regressionType == "2" || regressionType == "3" || regressionType == "4" || regressionType == "5"){ 
+                    pyodide.globals.set("ord", parseInt(regressionType));
 
                     pyodide.runPython(`
                         mat = [] # the matrix
@@ -182,12 +187,13 @@ function regressionBtnHandler() {
                     `);
                     let coeff = pyodide.globals.toJs().get("coeff");
                     
-                    let res = `${coeff[0].toFixed(2)}`;
+                    let res = `${coeff[0].toPrecision(4)}`;
                     for(let i = 1; i < coeff.length; i++){
-                        res = `${coeff[i].toFixed(2)}x^${i} + ${res}`
+                        res = `${coeff[i].toPrecision(4)}x^${i} + ${res}`
                     }
 
                     lines.push({"type": "polynomial", "coeff": coeff, "string": res});
+
                     pi = []; li = [];
                     for(let _ = 0; _ < points.length; _++){
                         pi.push(points[_]);
@@ -197,14 +203,10 @@ function regressionBtnHandler() {
                     }
                     stack.push({l: li, p: pi});
                     dump = [];
-                    return;
                 }
-                if(regressionType == "sinusoidal"){
+                else if(regressionType == "sinusoidal"){
                     pyodide.runPython(`
                         # complete, but is not guaranteed to give correct answer every time
-                        import numpy as np
-                        from scipy.optimize import leastsq
-                        
                         N = 100 # number of data points
                         X = np.linspace(0, 4*np.pi, N) 
                         Y = 3.0*np.sin(1.3*X+0.001) + 0.5
@@ -235,7 +237,8 @@ function regressionBtnHandler() {
                         ans = getSinReg(X, Y)
                     `);
                     let ans = pyodide.globals.toJs().get("ans");
-                    lines.push({"type": "sinusoidal", 'A': ans[0], 'B': ans[1], 'C': ans[2], 'D': ans[3], "string": `${ans[0].toFixed(2)}sin(${ans[1].toFixed(2)}x + ${ans[2].toFixed(2)}) + ${ans[3].toFixed(2)}`});
+                    lines.push({"type": "sinusoidal", 'A': ans[0], 'B': ans[1], 'C': ans[2], 'D': ans[3], "string": `${ans[0].toPrecision(4)}sin(${ans[1].toPrecision(4)}x + ${ans[2].toPrecision(4)}) + ${ans[3].toPrecision(4)}`});
+
                     pi = []; li = [];
                     for(let _ = 0; _ < points.length; _++){
                         pi.push(points[_]);
@@ -245,17 +248,13 @@ function regressionBtnHandler() {
                     }
                     stack.push({l: li, p: pi});
                     dump = [];
-                    return;
                 }
-                if(regressionType == "exponential"){
+                else if(regressionType == "exponential"){
                     pyodide.runPython(`
                         # complete
                         # logarithmic regression is the same as exponential regression
                         # you pass in the parameters (Y, X) instead of (X, Y), and 
                         # then your regression is ln((x-c)/a)/b.
-                        import numpy as np
-                        from scipy.optimize import leastsq
-                    
                         def getLinReg(x, y): 
                             # formula from Mr. Li's MDM4U workbook.
                             cp = 0 
@@ -301,7 +300,8 @@ function regressionBtnHandler() {
                         ans = getExpReg(X, Y)
                     `);
                     let ans = pyodide.globals.toJs().get("ans");
-                    lines.push({"type": "exponential", 'A': ans[0], 'B': ans[1], 'C': ans[2], "string": `${ans[0].toFixed(2)}(${(Math.E**ans[1]).toFixed(2)}^x) + ${ans[2].toFixed(2)}`});
+                    lines.push({"type": "exponential", 'A': ans[0], 'B': ans[1], 'C': ans[2], "string": `${ans[0].toPrecision(4)}(${(Math.E**ans[1]).toPrecision(4)}^x) + ${ans[2].toPrecision(4)}`});
+
                     pi = []; li = [];
                     for(let _ = 0; _ < points.length; _++){
                         pi.push(points[_]);
@@ -311,17 +311,13 @@ function regressionBtnHandler() {
                     }
                     stack.push({l: li, p: pi});
                     dump = [];
-                    return;
                 }
-                if(regressionType == "logarithmic"){
+                else if(regressionType == "logarithmic"){
                     pyodide.runPython(`
                         # complete
                         # logarithmic regression is the same as exponential regression
                         # you pass in the parameters (Y, X) instead of (X, Y), and 
-                        # then your regression is ln((x-c)/a)/b.
-                        import numpy as np
-                        from scipy.optimize import leastsq
-                    
+                        # then your regression is ln((x-c)/a)/b.                   
                         def getLinReg(x, y): 
                             # formula from Mr. Li's MDM4U workbook.
                             cp = 0 
@@ -367,7 +363,9 @@ function regressionBtnHandler() {
                         ans = getExpReg(Y, X)
                     `);
                     let ans = pyodide.globals.toJs().get("ans");
-                    lines.push({"type": "logarithmic", 'A': ans[0], 'B': ans[1], 'C': ans[2], "string": `ln((x-${ans[2].toFixed(2)}) / ${ans[0].toFixed(2)}) / ${ans[1].toFixed(2)}`});
+                    lines.push({"type": "logarithmic", 'A': ans[0], 'B': ans[1], 'C': ans[2], "string": `ln((x-${ans[2].toPrecision(4)}) / ${ans[0].toPrecision(4)}) / ${ans[1].toPrecision(4)}`});
+                    console.log(lines[lines.length-1].string);
+
                     pi = []; li = [];
                     for(let _ = 0; _ < points.length; _++){
                         pi.push(points[_]);
@@ -377,11 +375,8 @@ function regressionBtnHandler() {
                     }
                     stack.push({l: li, p: pi});
                     dump = [];
-                    return;
                 }
-                if(regressionType == "auto"){
-
-                }
+                appendToRegressionsTable_(lines[lines.length-1]);
             } 
             catch (err) {
                 alert("Regression Error: " + err);

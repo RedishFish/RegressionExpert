@@ -1,16 +1,13 @@
-// Bug noticed: when scaling the graph, sometimes the last ticks disappear on the axes.
-// Bug: x-scale y-scale does not working if increments are not divisble to the range.
-// Bug: select button does not work rn
-// TODO: Fix LN function asymptote
-// TODO: zoom in/out function with button
+// TODO: Could try to make it when zoom in/out scale changes dynamically (LOW PRIORITY)
+// TODO: Canvas width/height should be based on CSS attributes
 
-let X_STEP = 12;
-let Y_STEP = 7;
-let X_SUBSTEP = 3;
-let Y_SUBSTEP = 1;
-let X_RANGE = [-11, 29];
-let Y_RANGE = [-10, 20];
-const GRAPH_PADDING = 20;
+let X_STEP = 10;
+let Y_STEP = 10;
+let X_SUBSTEP = 5;
+let Y_SUBSTEP = 5;
+let X_RANGE = [-10, 100];
+let Y_RANGE = [-10, 50];
+const GRAPH_PADDING = 5;
 let x_substepPixels,
     x_stepPixels,
     y_axisPos,
@@ -83,23 +80,23 @@ if (id != null) {
     for (let i = 0; i < id.length; i++) {
         if(id[i] == 'l' || id[i] == 'p' || id[i] == 's' || id[i] == 'e' || id[i] == 'g'){
             if(curtype == 'l'){
-                lines.push({"type": "linear", "m": nxt[0], "b": nxt[1], "string": `y = ${nxt[0].toFixed(2)}x + ${nxt[1].toFixed(2)}`});
+                lines.push({"type": "linear", "m": nxt[0], "b": nxt[1], "string": `y = ${nxt[0].toPrecision(4)}x + ${nxt[1].toPrecision(4)}`});
             }
             if(curtype == 'p'){
-                let res = `${nxt[0].toFixed(2)}`;
+                let res = `${nxt[0].toPrecision(4)}`;
                 for(let i = 1; i < nxt.length; i++){
-                    res = `${nxt[i].toFixed(2)}x^${i} + ${res}`
+                    res = `${nxt[i].toPrecision(4)}x^${i} + ${res}`
                 }
                 lines.push({"type": "polynomial", "coeff": nxt, "string": res});
             }
             if(curtype == 's'){
-                lines.push({"type": "sinusoidal", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], 'D': nxt[3], "string": `${nxt[0].toFixed(2)}sin(${nxt[1].toFixed(2)}x + ${nxt[2].toFixed(2)}) + ${nxt[3].toFixed(2)}`});
+                lines.push({"type": "sinusoidal", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], 'D': nxt[3], "string": `${nxt[0].toPrecision(4)}sin(${nxt[1].toPrecision(4)}x + ${nxt[2].toPrecision(4)}) + ${nxt[3].toPrecision(4)}`});
             }
             if(curtype == 'e'){
-                lines.push({"type": "exponential", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], "string": `${nxt[0].toFixed(2)}(${(Math.E**nxt[1]).toFixed(2)}^x) + ${nxt[2].toFixed(2)}`});
+                lines.push({"type": "exponential", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], "string": `${nxt[0].toPrecision(4)}(${(Math.E**nxt[1]).toPrecision(4)}^x) + ${nxt[2].toPrecision(4)}`});
             }
             if(curtype == 'g'){
-                lines.push({"type": "logarithmic", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], "string": `ln((x-${nxt[2].toFixed(2)}) / ${nxt[0].toFixed(2)}) / ${nxt[1].toFixed(2)}`});
+                lines.push({"type": "logarithmic", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], "string": `ln((x-${nxt[2].toPrecision(4)}) / ${nxt[0].toPrecision(4)}) / ${nxt[1].toPrecision(4)}`});
             }
             nxt = [];
             curtype = id[i];
@@ -113,25 +110,24 @@ if (id != null) {
 }
 
 if(curtype == 'l'){
-    lines.push({"type": "linear", "m": nxt[0], "b": nxt[1], "string": `y = ${nxt[0].toFixed(2)}x + ${nxt[1].toFixed(2)}`});
+    lines.push({"type": "linear", "m": nxt[0], "b": nxt[1], "string": `y = ${nxt[0].toPrecision(4)}x + ${nxt[1].toPrecision(4)}`});
 }
 if(curtype == 'p'){
-    let res = `${nxt[0].toFixed(2)}`;
+    let res = `${nxt[0].toPrecision(4)}`;
     for(let i = 1; i < nxt.length; i++){
-        res = `${nxt[i].toFixed(2)}x^${i} + ${res}`
+        res = `${nxt[i].toPrecision(4)}x^${i} + ${res}`
     }
     lines.push({"type": "polynomial", "coeff": nxt, "string": res});
 }
 if(curtype == 's'){
-    lines.push({"type": "sinusoidal", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], 'D': nxt[3], "string": `${nxt[0].toFixed(2)}sin(${nxt[1].toFixed(2)}x + ${nxt[2].toFixed(2)}) + ${nxt[3].toFixed(2)}`});
+    lines.push({"type": "sinusoidal", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], 'D': nxt[3], "string": `${nxt[0].toPrecision(4)}sin(${nxt[1].toPrecision(4)}x + ${nxt[2].toPrecision(4)}) + ${nxt[3].toPrecision(4)}`});
 }
 if(curtype == 'e'){
-    lines.push({"type": "exponential", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], "string": `${nxt[0].toFixed(2)}(${(Math.E**nxt[1]).toFixed(2)}^x) + ${nxt[2].toFixed(2)}`});
+    lines.push({"type": "exponential", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], "string": `${nxt[0].toPrecision(4)}(${(Math.E**nxt[1]).toPrecision(4)}^x) + ${nxt[2].toPrecision(4)}`});
 }
 if(curtype == 'g'){
-    lines.push({"type": "logarithmic", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], "string": `ln((x-${nxt[2].toFixed(2)}) / ${nxt[0].toFixed(2)}) / ${nxt[1].toFixed(2)}`});
+    lines.push({"type": "logarithmic", 'A': nxt[0], 'B': nxt[1], 'C': nxt[2], "string": `ln((x-${nxt[2].toPrecision(4)}) / ${nxt[0].toPrecision(4)}) / ${nxt[1].toPrecision(4)}`});
 }
-console.log(lines);
 
 function setup() {
     let canvas = createCanvas(windowWidth * 0.75, windowHeight - 200);
@@ -230,13 +226,14 @@ document.getElementById("select-key").innerText = "Select ("+sclist[2]+")";
 function draw() {
     background(245);
 
-document.getElementById("user").value = localStorage.getItem("username");
+/** New Code **/
+    document.getElementById("user").value = localStorage.getItem("username");
     let pointStr = "";
     for (let i = 0; i < points.length; i++) {
         pointStr += "(";
-        pointStr += points[i][0].toFixed(2);
+        pointStr += points[i][0].toPrecision(4);
         pointStr += ",";
-        pointStr += points[i][1].toFixed(2);
+        pointStr += points[i][1].toPrecision(4);
         pointStr += "),";
     }
 
@@ -244,50 +241,52 @@ document.getElementById("user").value = localStorage.getItem("username");
     for (let i = 0; i < lines.length; i++){
         if(lines[i].type == "linear"){
             lineStr += "l";
-            lineStr += lines[i].m.toFixed(2).toString();
+            lineStr += lines[i].m.toPrecision(4).toString();
             lineStr += "|";
-            lineStr += lines[i].b.toFixed(2).toString();
+            lineStr += lines[i].b.toPrecision(4).toString();
             lineStr += "|";
         }
         if(lines[i].type == "polynomial"){
             lineStr += 'p';
             for(let j = 0; j < lines[i].coeff.length; j++){
-                lineStr += lines[i].coeff[j].toFixed(2).toString();
+                lineStr += lines[i].coeff[j].toPrecision(4).toString();
                 lineStr += "|";
             }
         }
         if(lines[i].type == "sinusoidal"){
             lineStr += 's';
-            lineStr += lines[i].A.toFixed(2).toString();
+            lineStr += lines[i].A.toPrecision(4).toString();
             lineStr += '|';
-            lineStr += lines[i].B.toFixed(2).toString();
+            lineStr += lines[i].B.toPrecision(4).toString();
             lineStr += '|';
-            lineStr += lines[i].C.toFixed(2).toString();
+            lineStr += lines[i].C.toPrecision(4).toString();
             lineStr += '|';
-            lineStr += lines[i].D.toFixed(2).toString();
+            lineStr += lines[i].D.toPrecision(4).toString();
             lineStr += "|";
         }
         if(lines[i].type == 'exponential'){
             lineStr += 'e';
-            lineStr += lines[i].A.toFixed(2).toString();
+            lineStr += lines[i].A.toPrecision(4).toString();
             lineStr += '|';
-            lineStr += lines[i].B.toFixed(2).toString();
+            lineStr += lines[i].B.toPrecision(4).toString();
             lineStr += '|';
-            lineStr += lines[i].C.toFixed(2).toString();
+            lineStr += lines[i].C.toPrecision(4).toString();
             lineStr += "|";
         }
         if(lines[i].type == 'logarithmic'){
             lineStr += 'g';
-            lineStr += lines[i].A.toFixed(2).toString();
+            lineStr += lines[i].A.toPrecision(4).toString();
             lineStr += '|';
-            lineStr += lines[i].B.toFixed(2).toString();
+            lineStr += lines[i].B.toPrecision(4).toString();
             lineStr += '|';
-            lineStr += lines[i].C.toFixed(2).toString();
+            lineStr += lines[i].C.toPrecision(4).toString();
             lineStr += "|";
         }
     }
     document.getElementById("points").value = pointStr;
     document.getElementById("lines").value = lineStr;
+    /** END **/
+
     onWorkspaceKeyStatuses();
     drawCartesian();
     drawPointsAndLines();
@@ -296,7 +295,9 @@ document.getElementById("user").value = localStorage.getItem("username");
 }
 
 function windowResized() {
-    resizeCanvas(windowWidth * 0.75, windowHeight - 200);
+    let w = document.getElementById("graph-display").offsetWidth-4.5;
+    let h = document.getElementById("graph-display").offsetHeight-4.5;
+    resizeCanvas(w, h);
     background(240);
 }
 
@@ -304,25 +305,27 @@ function keyPressed() {
     if (!cursorInCanvas()) {
         return;
     }
-    if (key == sclist[0]) {
+
+    if (key === sclist[0]) {
         workspaceKeyStatuses["p"] = !workspaceKeyStatuses["p"];
-        //if(workspaceKeyStatuses['p']) setAllKeysFalseExcept(workspaceKeyStatuses['p']);
     }
 
-    if (key == sclist[1]) {
+    if (key === sclist[1]) {
         workspaceKeyStatuses["d"] = true;
-        //if(workspaceKeyStatuses['d']) setAllKeysFalseExcept(workspaceKeyStatuses['d']);
     }
 
-    if (key == sclist[2]) {
+    if (key === sclist[2]) {
         workspaceKeyStatuses["s"] = !workspaceKeyStatuses["s"];
-        //if(workspaceKeyStatuses['s']) setAllKeysFalseExcept(workspaceKeyStatuses['s']);
+        startDrag_X = mouseX;
+        startDrag_Y = mouseY;
+        endDrag_X = mouseX;
+        endDrag_Y = mouseY;
     }
 
-    if(key === "c") {
+    /*if(key === "c") {
         lines = [];
         points = [];
-    }
+    }*/
 }
 
 /** Builtin p5js functions **/
@@ -333,10 +336,15 @@ function onCanvasClick() {
     }
 
     if (workspaceKeyStatuses["p"]) {
-        points.push([
-            X_STEP * ((mouseX - y_axisPos) / x_stepPixels),
-            Y_STEP * (-(mouseY - x_axisPos) / y_stepPixels),
-        ]);
+        let x = X_STEP * ((mouseX - y_axisPos) / x_stepPixels);
+        x = parseFloat(x.toPrecision(4));
+        let y = Y_STEP * (-(mouseY - x_axisPos) / y_stepPixels);
+        y = parseFloat(y.toPrecision(4));
+
+        appendToPointsTable_([x, y]);
+        points.push([x, y]);
+
+        /** New code **/
         pi = []; li = [];
         for(let _ = 0; _ < points.length; _++){
             pi.push(points[_]);
@@ -346,7 +354,10 @@ function onCanvasClick() {
         }
         stack.push({l: li, p: pi});
         dump = [];
+        /** End **/
+
         document.getElementsByClassName("save-status")[0].innerText = "X";
+
     } else if (workspaceKeyStatuses["s"]) {
         startDrag_X = mouseX;
         startDrag_Y = mouseY;
@@ -401,8 +412,17 @@ function mouseDragged() {
         endDrag_Y = mouseY;
     }
     else{
-        console.log(toDrag, keysInterfered())
-        if(toDrag && !keysInterfered()){
+        //console.log(startDrag_X, startDrag_Y, mouseX, mouseY)
+        
+        let popupOpen = false;
+        for (let popup of document.getElementsByClassName("popup")) {
+            if (popup.style.display == "block"){
+                popupOpen = true;
+                break;
+            }
+        }
+
+        if(toDrag && !keysInterfered() && !popupOpen){ 
             endDrag_X = mouseX;
             endDrag_Y = mouseY;
             delta_X_pixels = -(endDrag_X-startDrag_X);
@@ -429,10 +449,10 @@ function mouseReleased() {
             let x = y_axisPos + points[i][0] * x_conversionFactor;
             let y = x_axisPos - points[i][1] * y_conversionFactor;
             if (
-                startDrag_X < x &&
-                x < endDrag_X &&
-                startDrag_Y < y &&
-                y < endDrag_Y &&
+                Math.min(startDrag_X, endDrag_X) < x &&
+                x < Math.max(startDrag_X, endDrag_X) &&
+                Math.min(startDrag_Y, endDrag_Y) < y &&
+                y < Math.max(startDrag_Y, endDrag_Y) &&
                 !selectedPoints.includes(points[i])
             ) {
                 selectedPoints.push(points[i]);
@@ -452,8 +472,8 @@ function mouseWheel(event) {
         return;
     }
 
-    console.log(event.delta);
-    let zoomFactor = -event.delta/1000;
+    //console.log(event.delta);
+    let zoomFactor = event.delta/1000;
 
     X_RANGE[0] = zoomFactor*[X_RANGE[0]-(mouseX-y_axisPos)/x_conversionFactor]+X_RANGE[0];
     X_RANGE[1] = zoomFactor*[X_RANGE[1]-(mouseX-y_axisPos)/x_conversionFactor]+X_RANGE[1];
@@ -466,14 +486,6 @@ function mouseWheel(event) {
 /** HELPER FUNCTIONS for p5js draw() **/
 function cursorInCanvas() {
     return mouseX <= width && mouseX >= 0 && mouseY <= height && mouseY >= 0;
-}
-
-function setAllKeysFalseExcept(exceptedKey) { // probably not needed anymore?
-    for (let key of Object.keys(workspaceKeyStatuses)) {
-        if (key != exceptedKey) {
-            workspaceKeyStatuses[key] = false;
-        }
-    }
 }
 
 function keysInterfered() {
@@ -520,19 +532,19 @@ function drawCartesian() {
         ) {
             //main tick
             strokeWeight(2);
-            line(x, x_axisPos - 10, x, x_axisPos + 10);
+            line(x, x_axisPos - 5, x, x_axisPos + 5);
             if (Math.abs(x - y_axisPos) > 0.1) {
                 strokeWeight(0.2);
                 text(
                     Math.round(X_STEP * ((x - y_axisPos) / x_stepPixels)), // Changed
                     x,
-                    x_axisPos - 20,
+                    x_axisPos - 15,
                 );
             }
         } else {
             //subtick
             strokeWeight(1);
-            line(x, x_axisPos - 5, x, x_axisPos + 5);
+            line(x, x_axisPos - 2, x, x_axisPos + 2);
         }
     }
 
@@ -558,19 +570,19 @@ function drawCartesian() {
         ) {
             //main tick
             strokeWeight(2);
-            line(y_axisPos - 10, y, y_axisPos + 10, y);
+            line(y_axisPos - 5, y, y_axisPos + 5, y);
             if (Math.abs(y - x_axisPos) > 0.1) {
                 strokeWeight(0.2);
                 text(
                     Math.round(Y_STEP * (-(y - x_axisPos) / y_stepPixels)), // Changed
-                    y_axisPos - 30,
+                    y_axisPos - 20,
                     y,
                 );
             }
         } else {
             //subtick
             strokeWeight(1);
-            line(y_axisPos - 5, y, y_axisPos + 5, y);
+            line(y_axisPos - 2, y, y_axisPos + 2, y);
         }
     }
 }
@@ -605,7 +617,18 @@ function drawPointsAndLines() {
         //console.log(x_left, y_left, x_right, y_right, conversionFactor);
         //console.log(0, y_left*conversionFactor+x_axisPos, width, y_right*conversionFactor+x_axisPos);
         strokeWeight(2);
-        sketchFunction(lines[i], lines[i].type, 2);
+        if(lines[i].string.includes("NaN")){
+            alert("Cannot draw regression! For logarithmics and exponential, please only have points over 1 side of the x-axis and y-axis respectively!");
+            lines.splice(i, 1);
+            i--;
+        }
+        if(lines[i].type == "sinusoidal"){
+            sketchFunction(lines[i], lines[i].type, 1);
+        }
+        else{
+            sketchFunction(lines[i], lines[i].type, 2);
+        }
+
     }
 }
 
@@ -618,8 +641,10 @@ function onWorkspaceKeyStatuses() {
     }
     if (workspaceKeyStatuses["d"]) {
         for (let i = 0; i < selectedPoints.length; i++) {
+            deleteFromPointsTable_(selectedPoints[i]);
             points.splice(points.indexOf(selectedPoints[i]), 1);
         }
+        
         let pi = []; li = [];
         for(let _ = 0; _ < points.length; _++){
             pi.push(points[_]);
@@ -628,8 +653,8 @@ function onWorkspaceKeyStatuses() {
             li.push(lines[_]);
         }
         stack.push({l: li, p: pi});
-        console.log(stack.length);
         dump = [];
+
         document.getElementsByClassName("save-status")[0].innerText = "X";
         selectedPoints = [];
         workspaceKeyStatuses["d"] = false;
@@ -659,6 +684,10 @@ function goHome() {
 }
 
 function sketchFunction(line__, type, detailNumber) {
+    if(line__.string.includes("NaN")){
+        alert("Cannot draw regression! For logarithmics and exponential, please only have points over 1 side of the x-axis and y-axis respectively!");
+        return;
+    }
     // Simply draw a line if it is a linear function
     if(type == "linear"){
         let x_left = X_STEP * ((0 - y_axisPos) / x_stepPixels);
@@ -681,23 +710,49 @@ function sketchFunction(line__, type, detailNumber) {
 
         return;
     }
+    if(type == "logarithmic"){ //Gets very laggy if the graph is near linear
+        var VA_pos = line__.C * x_conversionFactor + y_axisPos;
 
-    // Otherwise draw a lot of small lines continuously to simulate a curved function
-    if(type == "logarithmic"){
+        let x_left = X_STEP * ((VA_pos - y_axisPos) / x_stepPixels);
+        let x_right = X_STEP * ((VA_pos + detailNumber - y_axisPos) / x_stepPixels);
+        let y_left = Y_RANGE[0]-100;
+        let y_right = Math.log((x_right-line__.C)/line__.A)/line__.B;
+        //console.log(x_left, x_right, y_left, y_right);
 
-        y_left = Math.log((x_left-line__.C)/line__.A)/line__.B;
-        y_right = Math.log((x_right-line__.C)/line__.A)/line__.B;
+        // First line after vertical asymptote
         line(
-            x,
+            VA_pos,
             x_axisPos - y_left * y_conversionFactor,
-            x+detailNumber,
+            VA_pos+detailNumber,
             x_axisPos - y_right * y_conversionFactor,
         );
+        // Equation label
+        strokeWeight(0.5);
+        textAlign(LEFT);
+        text(line__.string, VA_pos + 10, x_axisPos - y_right * y_conversionFactor + 10);
+        strokeWeight(2);
+        textAlign(CENTER);
+        
+        for(let x = VA_pos+detailNumber; x <= width+detailNumber; x += detailNumber){
+            x_left = X_STEP * ((x - y_axisPos) / x_stepPixels);
+            x_right = X_STEP * ((x+detailNumber - y_axisPos) / x_stepPixels);
+            y_left = Math.log((x_left-line__.C)/line__.A)/line__.B;
+            y_right = Math.log((x_right-line__.C)/line__.A)/line__.B;
+
+            line(
+                x,
+                x_axisPos - y_left * y_conversionFactor,
+                x+detailNumber,
+                x_axisPos - y_right * y_conversionFactor,
+            );
+        }
+
         return;
     }
 
+    // Otherwise draw a lot of small lines continuously to simulate a curved function
     else{
-        for(let x = 0; x <= width+detailNumber; x+=detailNumber){ 
+        for(let x = 0; x <= width+detailNumber; x += detailNumber){ 
             let x_left = X_STEP * ((x - y_axisPos) / x_stepPixels);
             let x_right = X_STEP * ((x+detailNumber - y_axisPos) / x_stepPixels);
             
@@ -718,7 +773,7 @@ function sketchFunction(line__, type, detailNumber) {
                 y_left = line__.A*(Math.E**(line__.B*x_left))+line__.C;
                 y_right = line__.A*(Math.E**(line__.B*x_right))+line__.C;
             }
-            
+
             line(
                 x,
                 x_axisPos - y_left * y_conversionFactor,
