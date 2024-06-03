@@ -45,7 +45,7 @@
             Settings
           </button>
           <br />
-          <button class="about-btn">About</button>
+          <button class="about-btn" onclick="location.href='/about'">About</button>
           <hr class="hr bottom-hr" />
         </div>
         <p class="quote-txt">
@@ -55,6 +55,11 @@
         <p class="quote-author">- Hans Rosling</p>
       </div>
     </div>
+    <p hidden id="ok"><%= ok %></p>
+    <p hidden id='sc_value'><%= sc %></p>
+    <form id="sc" action="/getSC" method="post">
+      <input hidden id='user' name='user'>
+    </form>
     <script>
       let popup = document.getElementById('popup')
 
@@ -80,6 +85,11 @@
         window.location.href = "index";
       }
       document.getElementsByClassName('user-to-greet')[0].innerText = user;
+      document.getElementById('user').value = user;
+      if(document.getElementById("ok").innerText == "Bad"){
+        document.getElementById('sc').submit();
+      }
+      localStorage.setItem('shortcuts', document.getElementById("sc_value").innerText);
     </script>
   </body>
 </html>
