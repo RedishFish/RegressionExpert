@@ -141,28 +141,91 @@ function setup() {
     textAlign(CENTER, CENTER);
 }
 
+// Allow for saving, continue working, and saving again in 1 session
+function refreshLastAttributes(){
+    let title = document.getElementsByClassName('graph-title-input')[0].value;
+    if(title == "") title = "Untitled Graph"
+    document.getElementById('origName').value = title;
+    document.getElementById('origPoints').value = document.getElementById("points").value;
+    document.getElementsByClassName("save-status")[0].innerText = "✓";
+}
+
+function setX(){
+    document.getElementsByClassName("save-status")[0].innerText = "X";
+}
+
 let stack = [], dump = [];
-let pi = [], li = [];
+let p2i = [], l2i = [];
 for(let _ = 0; _ < points.length; _++){
-    pi.push(points[_]);
+    p2i.push(points[_]);
 }
 for(let _ = 0; _ < lines.length; _++){
-    li.push(lines[_]);
+    l2i.push(lines[_]);
 }
-stack.push({l: li, p: pi});
+stack.push({l: l2i, p: p2i});
 function undo(){
+    document.getElementsByClassName("save-status")[0].innerText = "X";
     if(stack.length == 1) return;
-    dump.push(stack.pop());
+    let obj = stack.pop();
+    let pi = []; li = [];
+    for(let _ = 0; _ < obj.p.length; _++){
+        let pt = [];
+        pt.push(obj.p[_][0]);
+        pt.push(obj.p[_][1]);
+        pi.push(pt);
+    }
+    for(let _ = 0; _ < obj.l.length; _++){
+        let lt = [];
+        lt.push(obj.l[_][0]);
+        lt.push(obj.l[_][1]);
+        li.push(lt);
+    }
+    dump.push({p: pi, l: li});
+    for(let i = 0; i < stack.length; i++){
+        console.log(stack[i].p.length);
+    }
     lines = stack[stack.length-1].l;
     points = stack[stack.length-1].p;
 }
 
 function redo(){
+    document.getElementsByClassName("save-status")[0].innerText = "X";
     if(dump.length == 0) return;
-    stack.push(dump.pop());
-    lines = stack[stack.length-1].l;
-    points = stack[stack.length-1].p;
+    let obj = dump.pop();
+    let pii = []; lii = [];
+    for(let _ = 0; _ < obj.p.length; _++){
+        let pt = [];
+        pt.push(obj.p[_][0]);
+        pt.push(obj.p[_][1]);
+        pii.push(pt);
+    }
+    for(let _ = 0; _ < obj.l.length; _++){
+        let lt = [];
+        lt.push(obj.l[_][0]);
+        lt.push(obj.l[_][1]);
+        lii.push(lt);
+    }
+    let pi = []; li = [];
+    for(let _ = 0; _ < obj.p.length; _++){
+        let s = pii[_];
+        pi.push(s);
+    }
+    for(let _ = 0; _ < obj.l.length; _++){
+        li.push(lii[_]);
+    }
+    stack.push({p: pi, l: li});
+    for(let i = 0; i < stack.length; i++){
+        console.log(stack[i].p.length);
+    }
+    lines = li;
+    points = pi;
 }
+
+let shortcuts = localStorage.getItem('shortcuts');
+let sclist = shortcuts.split(" ");
+document.getElementById("plot-key").innerText = "Plot ("+sclist[0]+")";
+document.getElementById("delete-key").innerText = "Delete ("+sclist[1]+")";
+document.getElementById("select-key").innerText = "Select ("+sclist[2]+")";
 
 function draw() {
     background(245);
