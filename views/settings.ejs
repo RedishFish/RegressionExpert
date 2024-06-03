@@ -4,30 +4,66 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Settings</title>
-    <button class="logout-btn" onclick="openPopup()">Logout</button>
-    <div class="popup" id="popup">
-      <h2>Are you sure you want to log out?</h2>
-
-      <button type="button" onclick="closePopup()" class="no-btn">No</button>
-      <button type="button" onclick="logout()" class="yes-btn">Yes</button>
-    </div>
     <link rel="stylesheet" href="app-pages.css" />
+    <style>
+      .logout-btn {
+          position: relative;
+          bottom: 160px;
+      }
+      hr {
+          display: block;
+          height: 1px;
+          border: 0;
+          border-top: 5px solid seagreen;
+          margin: 1em 0;
+          padding: 0;
+      }
+      .setting-option-btns {
+        display: inline-block;
+        margin-right: 20px;
+      }
+      .settings-list {
+        border-style: solid;
+        border-width: 5px;
+        border-color: darkgray;
+      }
+
+      
+    </style>
   </head>
   <body>
       <a href="/home" class="small-logo">
         <img src="RegressionExpert-small-logo.png" alt="RegressionExpert"
       /></a>
-      <h1 class='main-title'>Settings</h1>
-      <div class='settings-list'>
-        <%= msg %>
-      </div>
-      <button onclick="getAccSettings()">Account Settings</button><br>
-      <button onclick="getGUI()">Visuals/GUI</button><br>
-      <button onclick="changePwd()">Change Password</button><br>
-    <button onclick="window.location.href='home';">Home Page</button>
+    
+    <h1 class='main-title'>Settings</h1>
+    <hr>
+    <div class='alert'>
+      <p id='alert'><%= msg %></p>
+    </div>
+    <button class="setting-option-btns" onclick="shortcuts()">Keyboard Shortcuts</button>
+    
+    <button class="setting-option-btns" onclick="changePwd()">Change Password</button>
+    <button class="setting-option-btns" onclick="window.location.href='home';">Home Page</button>
+    <hr>
+    <br>
+    <div hidden class='settings-list'></div>
+    <div hidden>
+      <form id="changeSC" action="/changeSC" method='post'>
+        <input id="plot" name="plot">
+        <input id="delete" name="delete">
+        <input id="select" name="select">
+        <input id="user" name="user">
+      </form>
+    </div>
     <script>
-      let popup = document.getElementById('popup')
-
+      document.getElementById("user").value = localStorage.getItem("username");
+      let popup = document.getElementById('popup');
+      let sclist = localStorage.getItem("shortcuts").split(' ');
+      document.getElementById("plot").value = sclist[0];
+      document.getElementById("delete").value = sclist[1];
+      document.getElementById("select").value = sclist[2];
+      
       function openPopup(){
         popup.classList.add('open-popup')
       }
@@ -41,17 +77,93 @@
         localStorage.removeItem("username");
       }
 
-      function getAccSettings(){
-        let box = document.getElementsByClassName("settings-list")[0];
-
+      function shortcuts(){
+        document.getElementById("alert").innerText = "Choose an option to get started: ";
+        let frame = document.getElementsByClassName("settings-list")[0];
+        frame.removeAttribute("hidden");
+        while(frame.hasChildNodes()){
+          frame.removeChild(frame.firstChild);
+        }
+        let pEl = document.createElement("p");
+        pEl.innerText = "Plot";
+        frame.appendChild(pEl);
+        pEl.style.display = "inline-block";
+        let buttonEl = document.createElement("button");
+        buttonEl.innerText = sclist[0];
+        buttonEl.style.display = "inline-block";
+        buttonEl.style["margin-left"] = "100px";
+        buttonEl.id = "p";
+        buttonEl.setAttribute('onclick', 'changeSC(this.id)');
+        frame.appendChild(buttonEl);
+        let hrEl = document.createElement("hr");
+        frame.appendChild(hrEl);
+        pEl = document.createElement("p");
+        pEl.innerText = "Delete";
+        frame.appendChild(pEl);
+        pEl.style.display = "inline-block";
+        buttonEl = document.createElement("button");
+        buttonEl.innerText = sclist[1];
+        buttonEl.style.display = "inline-block";
+        buttonEl.style["margin-left"] = "100px";
+        buttonEl.id = "d";
+        buttonEl.setAttribute('onclick', 'changeSC(this.id)');
+        frame.appendChild(buttonEl);
+        hrEl = document.createElement("hr");
+        frame.appendChild(hrEl);
+        pEl = document.createElement("p");
+        pEl.innerText = "Select";
+        frame.appendChild(pEl);
+        pEl.style.display = "inline-block";
+        buttonEl = document.createElement("button");
+        buttonEl.innerText = sclist[2];
+        buttonEl.style.display = "inline-block";
+        buttonEl.style["margin-left"] = "100px";
+        buttonEl.id = "s";
+        buttonEl.setAttribute('onclick', 'changeSC(this.id)');
+        frame.appendChild(buttonEl);
+        hrEl = document.createElement("hr");
+        frame.appendChild(hrEl);
       }
 
-      function getGUI(){
-        let box = document.getElementsByClassName("settings-list")[0];
+      function changeSC(id){
+        let note = document.getElementById("alert");
+        note.innerText = "Please press a key on your keyboard to set it as the shortcut."
+        if(id == 'p') document.addEventListener("keydown", plotKey);
+        if(id == 'd') document.addEventListener("keydown", deleteKey);
+        if(id == 's') document.addEventListener("keydown", selectKey);
+      }
+
+      function plotKey(e){
+        sclist[0] = e.key;
+        document.getElementById("alert").innerText = "Successfully set "+e.key+" as shortcut for plot.";
+        document.removeEventListener("keydown", plotKey);
+        document.getElementById("plot").value = e.key;
+        document.getElementById("p").innerHTML = e.key;
+        document.getElementById("changeSC").submit();
+      }
+
+      function deleteKey(e){
+        sclist[1] = e.key;
+        document.getElementById("alert").innerText = "Successfully set "+e.key+" as shortcut for delete.";
+        document.removeEventListener("keydown", deleteKey);
+        document.getElementById("delete").value = e.key;
+        document.getElementById("d").innerHTML = e.key;
+        document.getElementById("changeSC").submit();
+      }
+
+      function selectKey(e){
+        sclist[2] = e.key;
+        document.getElementById("alert").innerText = "Successfully set "+e.key+" as shortcut for select.";
+        document.removeEventListener("keydown", selectKey);
+        document.getElementById("select").value = e.key;
+        document.getElementById("s").innerHTML = e.key;
+        document.getElementById("changeSC").submit();
       }
       
       function changePwd(){
+        document.getElementById("alert").innerText = "Change Password";
         let frame = document.getElementsByClassName("settings-list")[0];
+        frame.removeAttribute("hidden");
         while(frame.hasChildNodes()){
           frame.removeChild(frame.firstChild);
         }
