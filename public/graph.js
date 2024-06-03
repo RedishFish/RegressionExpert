@@ -304,18 +304,17 @@ function keyPressed() {
     if (!cursorInCanvas()) {
         return;
     }
-
-    if (key === "p") {
+    if (key == sclist[0]) {
         workspaceKeyStatuses["p"] = !workspaceKeyStatuses["p"];
         //if(workspaceKeyStatuses['p']) setAllKeysFalseExcept(workspaceKeyStatuses['p']);
     }
 
-    if (key === "d") {
+    if (key == sclist[1]) {
         workspaceKeyStatuses["d"] = true;
         //if(workspaceKeyStatuses['d']) setAllKeysFalseExcept(workspaceKeyStatuses['d']);
     }
 
-    if (key === "s") {
+    if (key == sclist[2]) {
         workspaceKeyStatuses["s"] = !workspaceKeyStatuses["s"];
         //if(workspaceKeyStatuses['s']) setAllKeysFalseExcept(workspaceKeyStatuses['s']);
     }
@@ -347,6 +346,7 @@ function onCanvasClick() {
         }
         stack.push({l: li, p: pi});
         dump = [];
+        document.getElementsByClassName("save-status")[0].innerText = "X";
     } else if (workspaceKeyStatuses["s"]) {
         startDrag_X = mouseX;
         startDrag_Y = mouseY;
@@ -620,7 +620,7 @@ function onWorkspaceKeyStatuses() {
         for (let i = 0; i < selectedPoints.length; i++) {
             points.splice(points.indexOf(selectedPoints[i]), 1);
         }
-        pi = []; li = [];
+        let pi = []; li = [];
         for(let _ = 0; _ < points.length; _++){
             pi.push(points[_]);
         }
@@ -628,7 +628,9 @@ function onWorkspaceKeyStatuses() {
             li.push(lines[_]);
         }
         stack.push({l: li, p: pi});
+        console.log(stack.length);
         dump = [];
+        document.getElementsByClassName("save-status")[0].innerText = "X";
         selectedPoints = [];
         workspaceKeyStatuses["d"] = false;
     }
