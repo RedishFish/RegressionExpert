@@ -20,11 +20,11 @@
       <input
         class="graph-title-input"
         type="text"
-        placeholder="Untitled Graph" name='name'
+        placeholder="Untitled Graph" name='name' onchange='setX()'
       />
       <div class="save-container">
-        <button class="save-btn" type="submit">Save</button>
-        <span class="save-status">✓</span>
+        <button class="save-btn" type="submit" onclick='setTimeout(refreshLastAttributes, 100);'>Save</button>
+        <span class="save-status">X</span>
       </div>
       <div hidden>
         <input id='user' name='user'>
@@ -36,12 +36,12 @@
       </form>
       <div class="__do-btns">
         <div class="__do-btn undo-container">
-          <button><img src="undo-icon.png" alt="Undo icon" /></button>
+          <button><img src="undo-icon.png" alt="Undo icon" onclick="undo()"/></button>
           <br />
           <span>Undo (Ctrl-Z)</span>
         </div>
         <div class="__do-btn redo-container">
-          <button><img src="redo-icon.png" alt="Redo icon" /></button>
+          <button><img src="redo-icon.png" alt="Redo icon" onclick="redo()"/></button>
           <br />
           <span>Redo (Ctrl-Shift-Z)</span>
         </div>
@@ -53,15 +53,15 @@
           <button id="plot-btn">
             <img src="plot.png" alt="plot" />
           </button>
-          <span>Plot (P)</span>
+          <span id="plot-key">Plot (P)</span>
         </div>
         <div class="main-workspace-btn-container">
           <button id="delete-btn"><img src="delete.png" alt="delete" /></button>
-          <span>Delete (D)</span>
+          <span id="delete-key">Delete (D)</span>
         </div>
         <div class="main-workspace-btn-container">
           <button id="select-btn"><img src="select.png" alt="select" /></button>
-          <span>Select (S)</span>
+          <span id="select-key">Select (S)</span>
         </div>
         <div class="main-workspace-btn-container">
           <button id="x-scale-btn">
