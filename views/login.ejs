@@ -8,21 +8,20 @@
     <input id="user" name="user">
     <p>Password: </p>
     <input id="pwd" name="pwd"></input>
-    <button onclick="showAlert(); getUser();">Go</button>
+    <button onclick="getUser();">Log In</button>
     </form>
-    <p id='alert'></p>
+    <p class='alert'><%- msg -%></p>
     <button onclick="window.location.href='index';">Home Page</button>
-
+    <hr>
+    <img
+      class="big-logo"
+      src="RegressionExpert-small-logo.png"
+      alt="RegressionExpert-small-logo"
+    />
     <script>
-      function showAlert(){
-        let msg = document.getElementById('alert');
-        msg.innerText = "Invalid username and/or password!";
-        msg.style.color = 'red';
-      }
       function getUser(){
         let username = document.getElementById('user');
         localStorage.setItem('username', username.value);
-        console.log(localStorage.getItem('username'));
       }
     </script>
   </body>
