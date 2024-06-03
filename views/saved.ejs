@@ -5,31 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Saved Graphs</title>
     <link rel="icon" type="image/x-icon" href="delete.png">
-    <button onclick="window.location.href='home';" class="logout-btn">Home Page</button>
-    <button class="logout-btn" onclick="openPopup()">Logout</button>
-    <div class="popup" id="popup">
-      <h2>Are you sure you want to log out?</h2>
-
-      <button type="button" onclick="closePopup()" class="no-btn">No</button>
-      <button type="button" onclick="logout()" class="yes-btn">Yes</button>
-    </div>
+    
     <link rel="stylesheet" href="app-pages.css" />
+    <style>
+      button {
+        font-size: 20px;
+      }
+      
+      .logout-btn {
+        position: absolute;
+        top: 0px;
+        margin-left: 85%;
+      }
+
+      .main-title {
+        font-size: 50px;
+        text-align: center;
+      }
+
+      p:not(.hide), button {
+        display: inline-block;
+        position: relative;
+        left: 100px;
+      }
+      button:not(.logout-btn) {
+        float: right;
+      }
+      .delete-btn {
+        margin-right: 15%;
+      }
+      hr {
+          display: block;
+          height: 1px;
+          border: 0;
+          border-top: 5px solid seagreen;
+          margin: 1em 0;
+          padding: 0;
+      }
+    </style>
   </head>
   <body>
       <a href="/home" class="small-logo">
         <img src="RegressionExpert-small-logo.png" alt="RegressionExpert"
       /></a>
+
+      <div class="popup" id="popup">
+        <h2>Are you sure you want to log out?</h2>
+      
+        <button type="button" onclick="closePopup()" class="no-btn">No</button>
+        <button type="button" onclick="logout()" class="yes-btn">Yes</button>
+      </div>
       <h1 class='main-title'>Load a previously saved graph</h1>
       <form id='user' action='/saved' method='post'>
         <input hidden id='username' name='username'>
         <input hidden id='isOK' name='isOK' value="<%= ok %>">
       </form>
-      <div>
+      <div class="graph-list">
         <% for(let i = 0; i < btns.length; i++){ %>
           <p id="1<%= btns[i].points %>"><%= btns[i].name %></p>
-          <p hidden id='2<%= btns[i].points %>'><%= btns[i].regressions %></p>
-          <button id="<%= btns[i].points %>" onclick="getGraph(this.id)">Load</button>
-          <button id="3<%= btns[i].points %>" onclick="delGraph(this.id)">Delete</button>
+          <p hidden id='2<%= btns[i].points %>' class="hide"><%= btns[i].regressions %></p>
+          
+          <button id="3<%= btns[i].points %>" class="delete-btn" onclick="delGraph(this.id)">Delete<img src="delete-icon.png" height='41' width='41'></button>
+          <button id="<%= btns[i].points %>" class="edit-btn" onclick="getGraph(this.id)">Edit<img src="edit-icon.png"></button>
+          <hr>
         <% }%>
       </div>
       <div hidden>
@@ -69,6 +107,9 @@
         const user = localStorage.getItem("username");
         document.getElementById("deluser").value = user;
         document.getElementById('gname').value = document.getElementById('1'+id).innerText;
+        if(!confirm("Are you sure you want to delete '"+document.getElementById('gname').value+"'? This cannot be undone!")) {
+          return;
+        }
         let form = document.getElementById('del');
         form.submit();
       }
@@ -78,9 +119,6 @@
       username.value = user;
       let form = document.getElementById('user');
       form.submit();
-      localStorage.removeItem("graph-name");
-      localStorage.removeItem("points");
-      localStorage.removeItem("lines");
 
       if(user == null){
         alert("You are not logged in. Please log in first. ");
