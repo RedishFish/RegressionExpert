@@ -11,3 +11,16 @@ button {
 button:hover {
   background-color: violet;
 }
+
+.big-logo {
+  float: left;
+  margin-left: 1em;
+  margin-top: 1em;
+  width: 200px;
+  max-width: 500px;
+  border: 5px solid black;
+}
+
+.alert {
+  color: red;
+}
