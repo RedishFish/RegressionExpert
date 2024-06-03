@@ -2,6 +2,7 @@ import express from 'express';
 import sqlite3 from 'sqlite3';
 const app = express();
 import ejs from 'ejs';
+
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
@@ -15,16 +16,16 @@ app.get('/index', (req, res) => {
   res.render('index');
 });
 app.get('/newacc', (req, res) => {
-  res.render('newacc');
+  res.render('newacc', {"msg": ""});
 });
 app.get('/login', (req, res) => {
-  res.render('login');
+  res.render('login', {"msg": ""});
 });
 app.get('/success', (req, res) => {
   res.render('success');
 });
 app.get('/home', (req, res) => {
-  res.render('home');
+  res.render('home', {"ok": "Bad", "sc": ""});
 });
 app.get('/graph-editor', (req, res) => {
   res.render('graph-editor');
@@ -40,13 +41,34 @@ app.listen(3000, () => {
   console.log('Express server initiated.');
 });
 
+app.get('/saved', (req, res) => {
+  res.render('saved', {btns: [], ok: "Not OK"});
+});
+
 import bodyParser from 'body-parser';
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 const db = new sqlite3.Database('./userDB.sql');
 
-app.get('/saved', (req, res) => {
-  res.render('saved', {btns: [], ok: "Not OK"});
+app.post("/getSC", (req, res) => {
+  const user = req.body.user;
+  
+  let sql = "SELECT shortcuts FROM users WHERE username = \""+user+"\"";
+  db.all(sql, [], (err, ans) => {
+    if(err) throw err;
+    res.render('home', {'ok': "Good", "sc": ans[0].shortcuts});
+  });
+});
+
+app.post("/changeSC", (req, res) => {
+  const plot = req.body.plot;
+  const del = req.body.delete;
+  const select = req.body.select;
+  const user = req.body.user;
+  let sc = plot+" "+del+" "+select;
+  let sql = db.prepare("UPDATE users SET shortcuts = '"+sc+"' WHERE username = '"+user+"';")
+  sql.run();
+  sql.finalize();
 });
 
 app.post('/saved', (req, res) => {
@@ -61,32 +83,36 @@ app.post('/saved', (req, res) => {
   }
 });
 
-//db.run("CREATE TABLE users (username TEXT, pwd TEXT)")
+//db.run("CREATE TABLE users (username TEXT, pwd TEXT, shortcuts TEXT)")
 app.post('/newacc', (req, res) => {
   const user = req.body.user;
   const pwd = req.body.pwd;
-
-  let sql = "SELECT username FROM users WHERE username = \""+user+"\"";
-  db.all(sql, [], (err, ans) => {
-    if(err){
-      throw err;
-    }
-    try {
-      if(ans[0].username == user){
-
+  if(user == "users"){
+    res.render('newacc', {"msg": "For technical reasons, that username is not available. "});
+  }
+  else {
+    let sql = "SELECT username FROM users WHERE username = \""+user+"\"";
+    db.all(sql, [], (err, ans) => {
+      if(err){
+        throw err;
       }
-    }
-    catch {
-      db.serialize(() => {
-        let stmt = db.prepare("INSERT INTO users VALUES (\""+user+"\", \""+pwd+"\");");
-        stmt.run();
-        stmt = db.prepare("CREATE TABLE "+user+" (name TEXT, points TEXT, regressions TEXT);");
-        stmt.run();
-        stmt.finalize();
-        res.redirect('success');
-      });
-    }
-  });
+      try {
+        if(ans[0].username == user){
+          res.render('newacc', {"msg": "Username already exists!"});
+        }
+      }
+      catch {
+        db.serialize(() => {
+          let stmt = db.prepare("INSERT INTO users VALUES (\""+user+"\", \""+pwd+"\", \"p d s\");");
+          stmt.run();
+          stmt = db.prepare("CREATE TABLE "+user+" (name TEXT, points TEXT, regressions TEXT);");
+          stmt.run();
+          stmt.finalize();
+          res.redirect('success');
+        });
+      }
+    });
+  }
 });
 
 app.post('/login', (req, res) => {
@@ -94,16 +120,16 @@ app.post('/login', (req, res) => {
   const pwd = req.body.pwd;
   let sql = "SELECT pwd FROM users WHERE username = \""+user+"\";";
   db.all(sql, [], (err, ans) => {
-    if(err){
-      throw err;
-    }
     try {
       if(ans[0].pwd == pwd){
         res.redirect('home');
       }
+      else {
+        res.render('login', {"msg": "Invalid Password!"});
+      }
     }
     catch {
-
+      res.render('login', {"msg": "Invalid Username!"});
     }
   });
 });
