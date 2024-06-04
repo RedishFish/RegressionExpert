@@ -21,7 +21,7 @@
           src="Images/RegressionExpert-small-logo.png"
           alt="RegressionExpert"
       /></a>
-      <form action="/graph-editor" method="post">
+      <form action="/graph-editor" method="post" class="save-bundle">
         <input
           class="graph-title-input"
           type="text"
@@ -89,13 +89,13 @@
             <button id="x-scale-btn">
               <img src="Images/main-workspace/x-scale.png" alt="x-scale" />
             </button>
-            <span class="big-btn-text">x-scale (X)</span>
+            <span class="big-btn-text">x-scale</span>
           </div>
           <div class="main-workspace-btn-container">
             <button id="y-scale-btn">
               <img src="Images/main-workspace/y-scale.png" alt="y-scale" />
             </button>
-            <span class="big-btn-text">y-scale (Y)</span>
+            <span class="big-btn-text">y-scale</span>
           </div>
           <div class="main-workspace-btn-container">
             <button id="new-regression-btn">
@@ -104,7 +104,7 @@
                 alt="new regression"
               />
             </button>
-            <span class="big-btn-text">New Regression (N)</span>
+            <span class="big-btn-text">New Regression</span>
           </div>
         </div>
         <div class="popups-containers">
@@ -317,7 +317,7 @@
               alt="Table unfiltered"
             />
           </button>
-          <div class="side-bar-table-container">
+          <div class="side-bar-table-container points-table-container">
             <table class="table points-table">
               <thead>
                 <tr>
@@ -405,7 +405,7 @@
             </div>
           </div>
           <div class="filter-btn-none"></div>
-          <div class="side-bar-table-container">
+          <div class="side-bar-table-container regressions-table-container">
             <table class="table regression-table">
               <thead>
                 <tr>

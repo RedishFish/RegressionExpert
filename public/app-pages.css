@@ -9,7 +9,8 @@
     padding: .3em;
 }
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
 }
@@ -33,7 +34,7 @@ main {
     border-bottom: 5px solid rgb(59, 59, 59);
 }
 
-.nav-bar > * {
+.nav-bar>* {
     margin: auto .5em;
 }
 
@@ -70,7 +71,14 @@ button:active {
     border: none;
 }
 
-.save-btn{
+.save-bundle {
+    display: flex;
+    margin-left: 5%;
+    margin-right: 10%;
+}
+
+.save-btn {
+    margin-left: 10px;
     background-color: transparent;
     text-decoration: underline;
 }
@@ -124,7 +132,7 @@ button:active {
     display: flex;
     width: 100%;
     height: calc(100vh - 120px);
-    padding: 0; 
+    padding: 0;
     margin: 0;
 }
 
@@ -146,7 +154,7 @@ button:active {
     width: 100%;
 }
 
-.main-workspace-btns-container > :nth-child(6n) {
+.main-workspace-btns-container> :nth-child(6n) {
     float: right;
 }
 
@@ -165,7 +173,7 @@ button:active {
     border-radius: 10%;
 }
 
-.main-workspace-btns-container > :nth-child(6n) button {
+.main-workspace-btns-container> :nth-child(6n) button {
     width: 100px;
     height: 50px;
 }
@@ -210,7 +218,7 @@ canvas {
     background-image: linear-gradient(to bottom, rgb(0, 153, 255) 50px, rgb(247, 247, 247) 50px);
 }
 
-#regression-type-selector optgroup{
+#regression-type-selector optgroup {
     font-weight: 400;
 }
 
@@ -255,7 +263,7 @@ canvas {
     margin-right: auto;
 }
 
-.property input{
+.property input {
     text-align: center;
     height: 1.5em;
     width: 50px;
@@ -267,7 +275,7 @@ canvas {
     background-color: transparent;
 }
 
-.property select{
+.property select {
     float: right;
     border: none;
     border-bottom: 1px solid black;
@@ -296,7 +304,7 @@ canvas {
     height: calc(100vh - 100px);
     margin: 0;
     padding: 0;
-    background-color:#e1f6f6;
+    background-color: #e1f6f6;
     border-left: 3px solid black;
 }
 
@@ -449,6 +457,11 @@ canvas {
     height: 0;
     padding: 0;
     margin: 0;
+}
+
+.regressions-table-container {
+    position: relative;
+    top: -20px;
 }
 
 /** Load screen **/

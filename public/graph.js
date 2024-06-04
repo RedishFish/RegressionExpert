@@ -130,8 +130,11 @@ if(curtype == 'g'){
 }
 
 function setup() {
-    let canvas = createCanvas(windowWidth * 0.75, windowHeight - 200);
+    let w = document.getElementById("graph-display").offsetWidth-4.5;
+    let h = document.getElementById("graph-display").offsetHeight-4.5;
+    let canvas = createCanvas(w, h);
     canvas.mousePressed(onCanvasClick);
+    canvas.parent("graph-display");
 
     background(245);
     textAlign(CENTER, CENTER);
