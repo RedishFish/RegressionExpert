@@ -136,29 +136,44 @@
 
       function plotKey(e){
         sclist[0] = e.key;
-        document.getElementById("alert").innerText = "Successfully set "+e.key+" as shortcut for plot.";
         document.removeEventListener("keydown", plotKey);
-        document.getElementById("plot").value = e.key;
-        document.getElementById("p").innerHTML = e.key;
-        document.getElementById("changeSC").submit();
+        if(e.key == "'" || e.key == " " || e.key == "Enter"){
+          document.getElementById("alert").innerText = "Due to technical constraints, that key may not be set as a shortcut. ";
+        }
+        else {
+          document.getElementById("alert").innerText = "Successfully set "+e.key+" as shortcut for plot.";
+          document.getElementById("plot").value = e.key;
+          document.getElementById("p").innerHTML = e.key;
+          document.getElementById("changeSC").submit();
+        }
       }
 
       function deleteKey(e){
         sclist[1] = e.key;
-        document.getElementById("alert").innerText = "Successfully set "+e.key+" as shortcut for delete.";
         document.removeEventListener("keydown", deleteKey);
-        document.getElementById("delete").value = e.key;
-        document.getElementById("d").innerHTML = e.key;
-        document.getElementById("changeSC").submit();
+        if(e.key == "'" || e.key == " " || e.key == "Enter"){
+          document.getElementById("alert").innerText = "Due to technical constraints, that key may not be set as a shortcut. ";
+        }
+        else {
+          document.getElementById("alert").innerText = "Successfully set "+e.key+" as shortcut for delete.";
+          document.getElementById("delete").value = e.key;
+          document.getElementById("d").innerHTML = e.key;
+          document.getElementById("changeSC").submit();
+        }
       }
 
       function selectKey(e){
         sclist[2] = e.key;
-        document.getElementById("alert").innerText = "Successfully set "+e.key+" as shortcut for select.";
         document.removeEventListener("keydown", selectKey);
-        document.getElementById("select").value = e.key;
-        document.getElementById("s").innerHTML = e.key;
-        document.getElementById("changeSC").submit();
+        if(e.key == "'" || e.key == " " || e.key == "Enter"){
+          document.getElementById("alert").innerText = "Due to technical constraints, that key may not be set as a shortcut. ";
+        }
+        else {
+          document.getElementById("alert").innerText = "Successfully set "+e.key+" as shortcut for select.";
+          document.getElementById("select").value = e.key;
+          document.getElementById("s").innerHTML = e.key;
+          document.getElementById("changeSC").submit();
+        }
       }
       
       function changePwd(){
