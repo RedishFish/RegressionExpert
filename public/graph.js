@@ -518,11 +518,14 @@ function drawCartesian() {
     line(0, x_axisPos, width, x_axisPos);
 
     // Tick-marks, tick labels, and grid lines
+    let lastTick = y_axisPos-30;
     for (
-        let x = y_axisPos - Math.floor((-X_RANGE[0])/X_SUBSTEP)*x_substepPixels;
+        let x = y_axisPos;
         x <= width - GRAPH_PADDING;
         x += x_substepPixels
     ) {
+        if(x-lastTick < 30) continue;
+        lastTick = x;
         // Grid line
         stroke(128, 128, 128, 30);
         strokeWeight(1);
@@ -550,9 +553,44 @@ function drawCartesian() {
             line(x, x_axisPos - 2, x, x_axisPos + 2);
         }
     }
-
+    lastTick = y_axisPos+30;
     for (
-        let y = x_axisPos - Math.floor((Y_RANGE[1])/Y_SUBSTEP)*y_substepPixels;
+        let x = y_axisPos;
+        x >= X_RANGE[0]+GRAPH_PADDING;
+        x -= x_substepPixels
+    ) {
+        if(lastTick-x < 30) continue;
+        lastTick = x;
+        // Grid line
+        stroke(128, 128, 128, 30);
+        strokeWeight(1);
+        line(x, 0, x, height);
+
+        stroke("black");
+        if (
+            Math.abs(y_axisPos - x) % x_stepPixels < 0.1 ||
+            x_stepPixels - Math.abs(y_axisPos - x) % x_stepPixels < 0.1
+        ) {
+            //main tick
+            strokeWeight(2);
+            line(x, x_axisPos - 5, x, x_axisPos + 5);
+            if (Math.abs(x - y_axisPos) > 0.1) {
+                strokeWeight(0.2);
+                text(
+                    Math.round(X_STEP * ((x - y_axisPos) / x_stepPixels)), // Changed
+                    x,
+                    x_axisPos - 15,
+                );
+            }
+        } else {
+            //subtick
+            strokeWeight(1);
+            line(x, x_axisPos - 2, x, x_axisPos + 2);
+        }
+    }
+    lastTick = x_axisPos-30;
+    for (
+        let y = x_axisPos;
         y <= height - GRAPH_PADDING;
         y += y_substepPixels
     ) {
@@ -560,7 +598,47 @@ function drawCartesian() {
         if(debug){
             console.log(`${y-GRAPH_PADDING}, ${y_stepPixels}, ${Math.round((y-GRAPH_PADDING) % y_stepPixels) % y_stepPixels}`);
         }**/
+        if(y-lastTick < 30) continue;
+        lastTick = y;
+        // Grid line
+        stroke(128, 128, 128, 30);
+        strokeWeight(1);
+        line(0, y, width, y);
 
+        stroke("black");
+        if (
+            Math.abs(x_axisPos - y) % y_stepPixels < 0.1 ||
+            y_stepPixels - Math.abs(x_axisPos - y) % y_stepPixels < 0.1
+        ) {
+            //main tick
+            strokeWeight(2);
+            line(y_axisPos - 5, y, y_axisPos + 5, y);
+            if (Math.abs(y - x_axisPos) > 0.1) {
+                strokeWeight(0.2);
+                text(
+                    Math.round(Y_STEP * (-(y - x_axisPos) / y_stepPixels)), // Changed
+                    y_axisPos - 20,
+                    y,
+                );
+            }
+        } else {
+            //subtick
+            strokeWeight(1);
+            line(y_axisPos - 2, y, y_axisPos + 2, y);
+        }
+    }
+    lastTick = x_axisPos+30;
+    for (
+        let y = x_axisPos;
+        y >= Y_RANGE[0]+GRAPH_PADDING;
+        y -= y_substepPixels
+    ) {
+        /**
+        if(debug){
+            console.log(`${y-GRAPH_PADDING}, ${y_stepPixels}, ${Math.round((y-GRAPH_PADDING) % y_stepPixels) % y_stepPixels}`);
+        }**/
+        if(lastTick-y < 30) continue;
+        lastTick = y;
         // Grid line
         stroke(128, 128, 128, 30);
         strokeWeight(1);
