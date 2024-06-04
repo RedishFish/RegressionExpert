@@ -12,48 +12,46 @@
       <button type="button" onclick="logout()" class="yes-btn">Yes</button>
     </div>
     <link rel="stylesheet" href="app-pages.css" />
+    <link rel="icon" type="image/ico" href="/regression-expert.ico" />
   </head>
   <body>
-      <a href="/home" class="small-logo">
-        <img src="RegressionExpert-small-logo.png" alt="RegressionExpert"
-      /></a>
-      <h1 class='main-title'>Settings</h1>
-      <div class='settings-list'>
-        <p>Enter current password:</p>
-        <input>
-        <p>Enter new password:</p>
-        <input>
-        <p>Confirm new password:</p>
-        <input>
-        <button onclick="change()">Change</button>
-      </div>
-      <button onclick="getAccSettings()">Account Settings</button><br>
-      <button>Visuals/GUI</button><br>
-      <button>Change Password</button><br>
+    <a href="/home" class="small-logo">
+      <img src="Images/RegressionExpert-small-logo.png" alt="RegressionExpert"
+    /></a>
+    <h1 class="main-title">Settings</h1>
+    <div class="settings-list">
+      <p>Enter current password:</p>
+      <input />
+      <p>Enter new password:</p>
+      <input />
+      <p>Confirm new password:</p>
+      <input />
+      <button onclick="change()">Change</button>
+    </div>
+    <button onclick="getAccSettings()">Account Settings</button><br />
+    <button>Visuals/GUI</button><br />
+    <button>Change Password</button><br />
     <button onclick="window.location.href='home';">Home Page</button>
     <script>
-      let popup = document.getElementById('popup')
+      let popup = document.getElementById("popup");
 
-      function openPopup(){
-        popup.classList.add('open-popup')
+      function openPopup() {
+        popup.classList.add("open-popup");
       }
 
-      function closePopup(){
-        popup.classList.remove('open-popup')
+      function closePopup() {
+        popup.classList.remove("open-popup");
       }
 
-      function logout(){
+      function logout() {
         window.location.href = "index";
         localStorage.removeItem("username");
       }
 
-      function change(){
-        
-      }
+      function change() {}
 
-      function getAccSettings(){
+      function getAccSettings() {
         let box = document.getElementsByClassName("settings-list");
-        
       }
       /*
       const user = localStorage.getItem("username");
@@ -65,4 +63,3 @@
     </script>
   </body>
 </html>
-

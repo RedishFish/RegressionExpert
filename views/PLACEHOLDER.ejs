@@ -27,10 +27,17 @@
           type="text"
           placeholder="Untitled Graph"
           name="name"
+          onchange="setX()"
         />
         <div class="save-container">
-          <button class="save-btn" type="submit">Save</button>
-          <span class="save-status">✓</span>
+          <button
+            class="save-btn"
+            type="submit"
+            onclick="setTimeout(refreshLastAttributes, 100);"
+          >
+            Save
+          </button>
+          <span class="save-status">X</span>
         </div>
         <div hidden>
           <input id="user" name="user" />
@@ -64,19 +71,19 @@
             <button id="plot-btn">
               <img src="Images/main-workspace/plot.png" alt="plot" />
             </button>
-            <span class="big-btn-text">Plot (P)</span>
+            <span class="big-btn-text" id="plot-key">Plot (P)</span>
           </div>
           <div class="main-workspace-btn-container">
             <button id="delete-btn">
               <img src="Images/main-workspace/delete.png" alt="delete" />
             </button>
-            <span class="big-btn-text">Delete (D)</span>
+            <span class="big-btn-text" id="delete-key">Delete (D)</span>
           </div>
           <div class="main-workspace-btn-container">
             <button id="select-btn">
               <img src="Images/main-workspace/select.png" alt="select" />
             </button>
-            <span class="big-btn-text">Select (S)</span>
+            <span class="big-btn-text" id="select-key">Select (S)</span>
           </div>
           <div class="main-workspace-btn-container">
             <button id="x-scale-btn">
