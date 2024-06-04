@@ -2,18 +2,23 @@
 <html>
   <%- include('layouts/login-header'); -%>
   <body>
-    <h1 class="main-title">Home Page</h1>
-    <p>Welcome to RegressionExpert</p>
-
-    <p>Don't have an account?</p>
-    <button onclick="window.location.href='newacc';">Create Account</button>
-    <p>Already a user?</p>
-    <button onclick="window.location.href='login';">Log In</button>
-    <hr>
-    <img
-      class="big-logo"
-      src="Images/RegressionExpert-small-logo.png"
-      alt="RegressionExpert-small-logo"
-    />
+    <div class="nav-bar">
+      <div class="greet-wrapper">
+        <p class="greet-message">Welcome to <span id="regression-txt">Regression</span><span id="expert-txt">Expert</span></p>
+      </div>
+    </div>
+    <div class="main-space">
+      <div class="editor-img-wrapper">
+        <img src="Images/land-page/example-editor.png" alt="Example editor page">
+      </div>
+      <div class="create-line">
+        <p class="button-prompt">Don't have an account?</p>
+        <button class="land-page-btn" onclick="window.location.href='newacc';">Create Account</button>
+      </div>
+      <div class="login-line">
+        <p class="button-prompt">Already a user?</p>
+        <button class="land-page-btn" onclick="window.location.href='login';">Log In</button>
+      </div>
+    </div>
   </body>
 </html>
