@@ -206,35 +206,28 @@ function regressionBtnHandler() {
                 }
                 else if(regressionType == "sinusoidal"){
                     pyodide.runPython(`
-                        # complete, but is not guaranteed to give correct answer every time
-                        N = 100 # number of data points
-                        X = np.linspace(0, 4*np.pi, N) 
-                        Y = 3.0*np.sin(1.3*X+0.001) + 0.5
+                        import numpy, scipy.optimize
+                        def fit_sin(tt, yy):
+                            tt = numpy.array(tt)
+                            yy = numpy.array(yy)
+                            ff = numpy.fft.fftfreq(len(tt), (tt[1]-tt[0]))   # assume uniform spacing
+                            Fyy = abs(numpy.fft.fft(yy))
+                            guess_freq = abs(ff[numpy.argmax(Fyy[1:])+1])   # excluding the zero frequency "peak", which is related to offset
+                            guess_amp = numpy.std(yy) * 2.**0.5
+                            guess_offset = numpy.mean(yy)
+                            guess = numpy.array([guess_amp, 2.*numpy.pi*guess_freq, 0., guess_offset])
                         
-                        def getSinReg(x, y):
-                            # form: asin(bx+c)+d
-                            ans = [0, 0, 0, 0, 999999999]
-                            for _ in range(100):
-                                # these 4 values are initial guesses
-                                # because there is no good way to guess b, we brute force all possibilities < 20
-                                a = np.sqrt(np.mean(x)**2-np.std(x)**2)
-                                b = 0.2+_*0.2
-                                c = 0
-                                d = np.mean(x)
-                                
-                                func = lambda arr: arr[0]*np.sin(arr[1]*x+arr[2]) + arr[3] - y
-                                res = leastsq(func, [a, b, c, d])[0]
-                                cur = 0
-                                for i in range(x.size):
-                                    cur += (a*np.sin(b*x[i]+c)+d-y[i])**2
-                                cur += _*100
-                                if(cur < ans[4]):
-                                    ans = [res[0], res[1], res[2], res[3], cur]
-                            return [ans[0], ans[1], ans[2], ans[3]]
+                            def sinfunc(t, A, w, p, c):  return A * numpy.sin(w*t + p) + c
+                            popt, pcov = scipy.optimize.curve_fit(sinfunc, tt, yy, p0=guess)
+                            A, w, p, c = popt
+                            f = w/(2.*numpy.pi)
+                            fitfunc = lambda t: A * numpy.sin(w*t + p) + c
+                            return [A, w, p, c]
                         
+
                         X = np.array([p[0] for p in points])
                         Y = np.array([p[1] for p in points])
-                        ans = getSinReg(X, Y)
+                        ans = fit_sin(X, Y)
                     `);
                     let ans = pyodide.globals.toJs().get("ans");
                     lines.push({"type": "sinusoidal", 'A': ans[0], 'B': ans[1], 'C': ans[2], 'D': ans[3], "string": `${ans[0].toPrecision(4)}sin(${ans[1].toPrecision(4)}x + ${ans[2].toPrecision(4)}) + ${ans[3].toPrecision(4)}`});
