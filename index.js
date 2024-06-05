@@ -218,11 +218,15 @@ app.post("/changePwd", (req, res) => {
         msg: "New password and confirmation do not match!",
       });
     } else {
+      let sc = "";
+      sql = 'SELECT shortcuts FROM users WHERE username = "' + user + '";';
+      db.all(sql, [], (err, ans) => {
+        sc = ans[0].shortcuts;
+      });
       sql = db.prepare("DELETE FROM users WHERE username='" + user + "';");
       sql.run();
       sql = db.prepare(
-        'INSERT INTO users VALUES ("' + user + '", "' + newpwd + '");',
-      );
+        'INSERT INTO users VALUES ("' + user + '", "' + newpwd + '", "'+sc+'");');
       sql.run();
       sql.finalize();
       res.render("settings", { msg: "Password change successful." });
