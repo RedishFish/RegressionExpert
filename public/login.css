@@ -107,9 +107,48 @@
 /* END land page */
 
 /* newacc page */
-
-
-/* END newacc page */
 .alert {
   color: red;
+  position: absolute;
+  bottom: 500px;
 }
+
+h1 {
+  font-size: 50px;
+}
+
+.newacc-main-space {
+  position: absolute;
+  left: 0px;
+  top: 100px;
+  display: flex;
+}
+
+.acc-page-btn {
+  border-radius: 10px;
+  height: 70px;
+  width: 200px;
+  color: white;
+  border: none;
+  background-color: #7d91de;
+  transition: all 1s;
+  margin-top: 5%;
+}
+
+.acc-page-btn:hover {
+  background-color: #b2ccf5;
+  filter: none;
+  width: 250px;
+}
+
+.newacc-home {
+  position: absolute;
+  top: 250px;
+}
+
+.acc-greet-message {
+  border-bottom: 5px solid #6196c2;
+}
+
+/* END newacc page */
+
