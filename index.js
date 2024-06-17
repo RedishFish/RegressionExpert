@@ -52,7 +52,7 @@ const db = new sqlite3.Database("./userDB.sql");
 
 app.post("/getSC", (req, res) => {
   const user = req.body.user;
-
+  
   let sql = 'SELECT shortcuts FROM users WHERE username = "' + user + '"';
   db.all(sql, [], (err, ans) => {
     if (err) throw err;
@@ -209,6 +209,7 @@ app.post("/changePwd", (req, res) => {
   const oldpwd = req.body["old-pwd"];
   const newpwd = req.body["new-pwd"];
   const confirm = req.body["confirm-pwd"];
+  const sc = req.body["shortcuts"];
   let sql = 'SELECT pwd FROM users WHERE username = "' + user + '";';
   db.all(sql, [], (err, ans) => {
     if (ans[0].pwd != oldpwd) {
@@ -217,12 +218,8 @@ app.post("/changePwd", (req, res) => {
       res.render("settings", {
         msg: "New password and confirmation do not match!",
       });
-    } else {
-      let sc = "";
-      sql = 'SELECT shortcuts FROM users WHERE username = "' + user + '";';
-      db.all(sql, [], (err, ans) => {
-        sc = ans[0].shortcuts;
-      });
+    } 
+    else {  
       sql = db.prepare("DELETE FROM users WHERE username='" + user + "';");
       sql.run();
       sql = db.prepare(

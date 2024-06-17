@@ -13,7 +13,7 @@ function x_scaleBtnHandler() {
     let x_exitBtn = x_scalePopup.getElementsByClassName("exit-btn")[0];
     let x_enterBtn = x_scalePopup.getElementsByClassName("enter-btn")[0];
 
-    x_scaleBtn.addEventListener("click", function() {
+    x_scaleBtn.addEventListener("click", function () {
         let rect = x_scaleBtn.getBoundingClientRect();
         x_scalePopup.style = `
             display: block;
@@ -23,20 +23,29 @@ function x_scaleBtnHandler() {
         `;
     });
 
-    x_exitBtn.addEventListener("click", function() {
+    x_exitBtn.addEventListener("click", function () {
         x_scalePopup.style.display = "none";
     });
 
-    x_enterBtn.addEventListener("click", function() {
+    x_enterBtn.addEventListener("click", function () {
         let step = parseInt(document.getElementById("x-increment-field").value);
-        let substep = parseInt(document.getElementById("x-subincrement-field").value);
-        let leftLimit = parseInt(document.getElementById("x-left-limit-field").value);
-        let rightLimit = parseInt(document.getElementById("x-right-limit-field").value);
-        let x_axisBreak = parseInt(document.getElementById("x-axis-break-field").value);
+        let substep = parseInt(
+            document.getElementById("x-subincrement-field").value,
+        );
+        let leftLimit = parseInt(
+            document.getElementById("x-left-limit-field").value,
+        );
+        let rightLimit = parseInt(
+            document.getElementById("x-right-limit-field").value,
+        );
+        let x_axisBreak = parseInt(
+            document.getElementById("x-axis-break-field").value,
+        );
 
-        if(leftLimit && rightLimit) X_RANGE = [leftLimit, rightLimit];
-        if(step) X_STEP = step;
-        if(substep) X_SUBSTEP = substep;
+        if ((leftLimit || leftLimit === 0) && (rightLimit || rightLimit === 0))
+            X_RANGE = [leftLimit, rightLimit];
+        if (step) X_STEP = step;
+        if (substep) X_SUBSTEP = substep;
     });
 }
 
@@ -46,7 +55,7 @@ function y_scaleBtnHandler() {
     let y_exitBtn = y_scalePopup.getElementsByClassName("exit-btn")[0];
     let y_enterBtn = y_scalePopup.getElementsByClassName("enter-btn")[0];
 
-    y_scaleBtn.addEventListener("click", function() {
+    y_scaleBtn.addEventListener("click", function () {
         let rect = y_scaleBtn.getBoundingClientRect();
         y_scalePopup.style = `
             display: block;
@@ -56,30 +65,42 @@ function y_scaleBtnHandler() {
         `;
     });
 
-    y_exitBtn.addEventListener("click", function() {
+    y_exitBtn.addEventListener("click", function () {
         y_scalePopup.style.display = "none";
     });
 
-    y_enterBtn.addEventListener("click", function() {
+    y_enterBtn.addEventListener("click", function () {
         let step = parseInt(document.getElementById("y-increment-field").value);
-        let substep = parseInt(document.getElementById("y-subincrement-field").value);
-        let leftLimit = parseInt(document.getElementById("y-left-limit-field").value);
-        let rightLimit = parseInt(document.getElementById("y-right-limit-field").value);
-        let y_axisBreak = parseInt(document.getElementById("y-axis-break-field").value);
+        let substep = parseInt(
+            document.getElementById("y-subincrement-field").value,
+        );
+        let leftLimit = parseInt(
+            document.getElementById("y-left-limit-field").value,
+        );
+        let rightLimit = parseInt(
+            document.getElementById("y-right-limit-field").value,
+        );
+        let y_axisBreak = parseInt(
+            document.getElementById("y-axis-break-field").value,
+        );
 
-        if(leftLimit && rightLimit) Y_RANGE = [leftLimit, rightLimit];
-        if(step) Y_STEP = step;
-        if(substep) Y_SUBSTEP = substep;
+        if ((leftLimit || leftLimit === 0) && (rightLimit || rightLimit === 0))
+            Y_RANGE = [leftLimit, rightLimit];
+        if (step) Y_STEP = step;
+        if (substep) Y_SUBSTEP = substep;
     });
 }
 
 function regressionBtnHandler() {
-    let regressionPopup = document.getElementsByClassName("regression-popup")[0];
+    let regressionPopup =
+        document.getElementsByClassName("regression-popup")[0];
     let regressionBtn = document.getElementById("new-regression-btn");
-    let regressionExitBtn = regressionPopup.getElementsByClassName("exit-btn")[0];
-    let regressionEnterBtn = regressionPopup.getElementsByClassName("enter-btn")[0];
+    let regressionExitBtn =
+        regressionPopup.getElementsByClassName("exit-btn")[0];
+    let regressionEnterBtn =
+        regressionPopup.getElementsByClassName("enter-btn")[0];
 
-    regressionBtn.addEventListener("click", function() {
+    regressionBtn.addEventListener("click", function () {
         let rect = regressionBtn.getBoundingClientRect();
         regressionPopup.style = `
             display: block;
@@ -89,12 +110,14 @@ function regressionBtnHandler() {
         `;
     });
 
-    regressionExitBtn.addEventListener("click", function() {
+    regressionExitBtn.addEventListener("click", function () {
         regressionPopup.style.display = "none";
     });
 
-    regressionEnterBtn.addEventListener("click", function() {
-        let regressionType = document.getElementById("regression-type-selector").value;
+    regressionEnterBtn.addEventListener("click", function () {
+        let regressionType = document.getElementById(
+            "regression-type-selector",
+        ).value;
         //console.log(regressionType);
 
         async function addPython() {
@@ -104,7 +127,7 @@ function regressionBtnHandler() {
                     points = [pt for pt in points if not math.isnan(pt[0]) and not math.isnan(pt[1])]
                 `);
 
-                if(regressionType == "linear"){
+                if (regressionType == "linear") {
                     pyodide.runPython(`
                         for i in points:
                             cp = 0
@@ -126,21 +149,31 @@ function regressionBtnHandler() {
                                 tot += (points[i][1]-sy/len(points))**2
                             r2 = 1-res/tot
                     `);
-                    let m = pyodide.globals.toJs().get('m');
-                    let b = pyodide.globals.toJs().get('b');
-                    lines.push({"type": "linear", "m": m, "b": b, "string": `y = ${m.toPrecision(4)}x + ${b.toPrecision(4)}`});
+                    let m = pyodide.globals.toJs().get("m");
+                    let b = pyodide.globals.toJs().get("b");
+                    lines.push({
+                        type: "linear",
+                        m: m,
+                        b: b,
+                        string: `y = ${m.toPrecision(4)}x + ${b.toPrecision(4)}`,
+                    });
 
-                    pi = []; li = [];
-                    for(let _ = 0; _ < points.length; _++){
+                    pi = [];
+                    li = [];
+                    for (let _ = 0; _ < points.length; _++) {
                         pi.push(points[_]);
                     }
-                    for(let _ = 0; _ < lines.length; _++){
+                    for (let _ = 0; _ < lines.length; _++) {
                         li.push(lines[_]);
                     }
-                    stack.push({l: li, p: pi});
+                    stack.push({ l: li, p: pi });
                     dump = [];
-                }
-                else if(regressionType == "2" || regressionType == "3" || regressionType == "4" || regressionType == "5"){ 
+                } else if (
+                    regressionType == "2" ||
+                    regressionType == "3" ||
+                    regressionType == "4" ||
+                    regressionType == "5"
+                ) {
                     pyodide.globals.set("ord", parseInt(regressionType));
 
                     pyodide.runPython(`
@@ -186,25 +219,29 @@ function regressionBtnHandler() {
                             coeff.append(col[i]/mat[i][i])
                     `);
                     let coeff = pyodide.globals.toJs().get("coeff");
-                    
+
                     let res = `${coeff[0].toPrecision(4)}`;
-                    for(let i = 1; i < coeff.length; i++){
-                        res = `${coeff[i].toPrecision(4)}x^${i} + ${res}`
+                    for (let i = 1; i < coeff.length; i++) {
+                        res = `${coeff[i].toPrecision(4)}x^${i} + ${res}`;
                     }
 
-                    lines.push({"type": "polynomial", "coeff": coeff, "string": res});
+                    lines.push({
+                        type: "polynomial",
+                        coeff: coeff,
+                        string: res,
+                    });
 
-                    pi = []; li = [];
-                    for(let _ = 0; _ < points.length; _++){
+                    pi = [];
+                    li = [];
+                    for (let _ = 0; _ < points.length; _++) {
                         pi.push(points[_]);
                     }
-                    for(let _ = 0; _ < lines.length; _++){
+                    for (let _ = 0; _ < lines.length; _++) {
                         li.push(lines[_]);
                     }
-                    stack.push({l: li, p: pi});
+                    stack.push({ l: li, p: pi });
                     dump = [];
-                }
-                else if(regressionType == "sinusoidal"){
+                } else if (regressionType == "sinusoidal") {
                     pyodide.runPython(`
                         import numpy, scipy.optimize
                         def fit_sin(tt, yy):
@@ -230,19 +267,26 @@ function regressionBtnHandler() {
                         ans = fit_sin(X, Y)
                     `);
                     let ans = pyodide.globals.toJs().get("ans");
-                    lines.push({"type": "sinusoidal", 'A': ans[0], 'B': ans[1], 'C': ans[2], 'D': ans[3], "string": `${ans[0].toPrecision(4)}sin(${ans[1].toPrecision(4)}x + ${ans[2].toPrecision(4)}) + ${ans[3].toPrecision(4)}`});
+                    lines.push({
+                        type: "sinusoidal",
+                        A: ans[0],
+                        B: ans[1],
+                        C: ans[2],
+                        D: ans[3],
+                        string: `${ans[0].toPrecision(4)}sin(${ans[1].toPrecision(4)}x + ${ans[2].toPrecision(4)}) + ${ans[3].toPrecision(4)}`,
+                    });
 
-                    pi = []; li = [];
-                    for(let _ = 0; _ < points.length; _++){
+                    pi = [];
+                    li = [];
+                    for (let _ = 0; _ < points.length; _++) {
                         pi.push(points[_]);
                     }
-                    for(let _ = 0; _ < lines.length; _++){
+                    for (let _ = 0; _ < lines.length; _++) {
                         li.push(lines[_]);
                     }
-                    stack.push({l: li, p: pi});
+                    stack.push({ l: li, p: pi });
                     dump = [];
-                }
-                else if(regressionType == "exponential"){
+                } else if (regressionType == "exponential") {
                     pyodide.runPython(`
                         # complete
                         # logarithmic regression is the same as exponential regression
@@ -293,19 +337,25 @@ function regressionBtnHandler() {
                         ans = getExpReg(X, Y)
                     `);
                     let ans = pyodide.globals.toJs().get("ans");
-                    lines.push({"type": "exponential", 'A': ans[0], 'B': ans[1], 'C': ans[2], "string": `${ans[0].toPrecision(4)}(${(Math.E**ans[1]).toPrecision(4)}^x) + ${ans[2].toPrecision(4)}`});
+                    lines.push({
+                        type: "exponential",
+                        A: ans[0],
+                        B: ans[1],
+                        C: ans[2],
+                        string: `${ans[0].toPrecision(4)}(${(Math.E ** ans[1]).toPrecision(4)}^x) + ${ans[2].toPrecision(4)}`,
+                    });
 
-                    pi = []; li = [];
-                    for(let _ = 0; _ < points.length; _++){
+                    pi = [];
+                    li = [];
+                    for (let _ = 0; _ < points.length; _++) {
                         pi.push(points[_]);
                     }
-                    for(let _ = 0; _ < lines.length; _++){
+                    for (let _ = 0; _ < lines.length; _++) {
                         li.push(lines[_]);
                     }
-                    stack.push({l: li, p: pi});
+                    stack.push({ l: li, p: pi });
                     dump = [];
-                }
-                else if(regressionType == "logarithmic"){
+                } else if (regressionType == "logarithmic") {
                     pyodide.runPython(`
                         # complete
                         # logarithmic regression is the same as exponential regression
@@ -356,26 +406,32 @@ function regressionBtnHandler() {
                         ans = getExpReg(Y, X)
                     `);
                     let ans = pyodide.globals.toJs().get("ans");
-                    lines.push({"type": "logarithmic", 'A': ans[0], 'B': ans[1], 'C': ans[2], "string": `ln((x-${ans[2].toPrecision(4)}) / ${ans[0].toPrecision(4)}) / ${ans[1].toPrecision(4)}`});
-                    console.log(lines[lines.length-1].string);
+                    lines.push({
+                        type: "logarithmic",
+                        A: ans[0],
+                        B: ans[1],
+                        C: ans[2],
+                        string: `ln((x-${ans[2].toPrecision(4)}) / ${ans[0].toPrecision(4)}) / ${ans[1].toPrecision(4)}`,
+                    });
+                    console.log(lines[lines.length - 1].string);
 
-                    pi = []; li = [];
-                    for(let _ = 0; _ < points.length; _++){
+                    pi = [];
+                    li = [];
+                    for (let _ = 0; _ < points.length; _++) {
                         pi.push(points[_]);
                     }
-                    for(let _ = 0; _ < lines.length; _++){
+                    for (let _ = 0; _ < lines.length; _++) {
                         li.push(lines[_]);
                     }
-                    stack.push({l: li, p: pi});
+                    stack.push({ l: li, p: pi });
                     dump = [];
                 }
-                appendToRegressionsTable_(lines[lines.length-1]);
-            } 
-            catch (err) {
+                appendToRegressionsTable_(lines[lines.length - 1]);
+            } catch (err) {
                 alert("Regression Error: " + err);
             }
         }
-        
+
         addPython();
     });
 }

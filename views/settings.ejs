@@ -144,6 +144,8 @@
           document.getElementById("alert").innerText = "Successfully set "+e.key+" as shortcut for plot.";
           document.getElementById("plot").value = e.key;
           document.getElementById("p").innerHTML = e.key;
+          let newSC = e.key+" "+sclist[1]+" "+sclist[2];
+          localStorage.setItem("shortcuts", newSC);
           document.getElementById("changeSC").submit();
         }
       }
@@ -158,6 +160,8 @@
           document.getElementById("alert").innerText = "Successfully set "+e.key+" as shortcut for delete.";
           document.getElementById("delete").value = e.key;
           document.getElementById("d").innerHTML = e.key;
+          let newSC = sclist[0]+" "+e.key+" "+sclist[2];
+          localStorage.setItem("shortcuts", newSC);
           document.getElementById("changeSC").submit();
         }
       }
@@ -172,6 +176,8 @@
           document.getElementById("alert").innerText = "Successfully set "+e.key+" as shortcut for select.";
           document.getElementById("select").value = e.key;
           document.getElementById("s").innerHTML = e.key;
+          let newSC = sclist[0]+" "+sclist[1]+" "+e.key;
+          localStorage.setItem("shortcuts", newSC);
           document.getElementById("changeSC").submit();
         }
       }
@@ -216,6 +222,12 @@
         inputEl.name = "username";
         inputEl.value = localStorage.getItem("username");
         inputEl.style.display = "none";
+        box.appendChild(inputEl);
+        inputEl = document.createElement("input");
+        inputEl.id = "shortcuts";
+        inputEl.name = "shortcuts";
+        inputEl.style.display = "none";
+        inputEl.value = localStorage.getItem("shortcuts");
         box.appendChild(inputEl);
         frame.appendChild(box);
       }
