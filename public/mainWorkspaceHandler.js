@@ -1,6 +1,12 @@
-//TODO: Allow different degree for polynomial
-//BUG:Sin issue and logarithmic not working for negative x-vals
+/*
+*    Author: Philip Xu
+*    Date: 2024/06/18
+*    Description: Adds functionality to the main workspace buttons
+*/
 
+//BUG: Sin issue and logarithmic not working for negative x-vals
+
+// Export the functions in mainWorkspaceHandler() function
 window.mainWorkspaceHandler = function mainWorkspaceHandler() {
     x_scaleBtnHandler();
     y_scaleBtnHandler();
@@ -13,6 +19,7 @@ function x_scaleBtnHandler() {
     let x_exitBtn = x_scalePopup.getElementsByClassName("exit-btn")[0];
     let x_enterBtn = x_scalePopup.getElementsByClassName("enter-btn")[0];
 
+    // Opens the popup
     x_scaleBtn.addEventListener("click", function () {
         let rect = x_scaleBtn.getBoundingClientRect();
         x_scalePopup.style = `
@@ -23,10 +30,12 @@ function x_scaleBtnHandler() {
         `;
     });
 
+    // Closes the popup
     x_exitBtn.addEventListener("click", function () {
         x_scalePopup.style.display = "none";
     });
 
+    // Sends the input values to graph.js global variables
     x_enterBtn.addEventListener("click", function () {
         let step = parseInt(document.getElementById("x-increment-field").value);
         let substep = parseInt(
@@ -42,6 +51,7 @@ function x_scaleBtnHandler() {
             document.getElementById("x-axis-break-field").value,
         );
 
+        // Sets graph.js variables
         if ((leftLimit || leftLimit === 0) && (rightLimit || rightLimit === 0))
             X_RANGE = [leftLimit, rightLimit];
         if (step) X_STEP = step;
@@ -55,6 +65,7 @@ function y_scaleBtnHandler() {
     let y_exitBtn = y_scalePopup.getElementsByClassName("exit-btn")[0];
     let y_enterBtn = y_scalePopup.getElementsByClassName("enter-btn")[0];
 
+    // Opens popup
     y_scaleBtn.addEventListener("click", function () {
         let rect = y_scaleBtn.getBoundingClientRect();
         y_scalePopup.style = `
@@ -65,10 +76,12 @@ function y_scaleBtnHandler() {
         `;
     });
 
+    // Closes popup
     y_exitBtn.addEventListener("click", function () {
         y_scalePopup.style.display = "none";
     });
 
+    // Sends the input values to graph.js global variables. 
     y_enterBtn.addEventListener("click", function () {
         let step = parseInt(document.getElementById("y-increment-field").value);
         let substep = parseInt(
@@ -84,6 +97,7 @@ function y_scaleBtnHandler() {
             document.getElementById("y-axis-break-field").value,
         );
 
+        // Sets graph.js variables
         if ((leftLimit || leftLimit === 0) && (rightLimit || rightLimit === 0))
             Y_RANGE = [leftLimit, rightLimit];
         if (step) Y_STEP = step;
@@ -100,6 +114,7 @@ function regressionBtnHandler() {
     let regressionEnterBtn =
         regressionPopup.getElementsByClassName("enter-btn")[0];
 
+    // Opens popup
     regressionBtn.addEventListener("click", function () {
         let rect = regressionBtn.getBoundingClientRect();
         regressionPopup.style = `
@@ -110,15 +125,16 @@ function regressionBtnHandler() {
         `;
     });
 
+    // Closes popup
     regressionExitBtn.addEventListener("click", function () {
         regressionPopup.style.display = "none";
     });
 
+    // Sends new line to graph.js lines variable. Regression is calculated using the pyodide library which executes Python.
     regressionEnterBtn.addEventListener("click", function () {
         let regressionType = document.getElementById(
             "regression-type-selector",
         ).value;
-        //console.log(regressionType);
 
         async function addPython() {
             try {
