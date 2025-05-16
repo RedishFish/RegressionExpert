@@ -3,9 +3,9 @@ Welcome to Regression Expert! To run the software, you can either get a copy fro
 
 ## Notes for forking to Code Editor
 A few steps need to be followed for the code to work:
-- Change index.js import statements
+- Change index.js import statements according to the comments
 - Have Node.js installed and connected to your code editor
-- Run the command `npm install express sqlite3 ejs`
+- Run the command `npm install express sqlite3 ejs` to install necessary libraries
 And you should be set!
 
 ## About
