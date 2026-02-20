@@ -1,5 +1,5 @@
 # ![Regression Expert Big Logo](./public/Images/RegressionExpert-small-logo.png)
-Welcome to Regression Expert! To run the software, you can either get a copy from [Replit](https://replit.com/@PHILIPXU1/RegressionExpert-1), or fork a copy onto your code editor. You may also access the website [here](https://regression-expert-3--PhilipXu.replit.app).
+Welcome to Regression Expert! You may also access the website [here]([https://regression-expert-3--PhilipXu.replit.app](https://regressionexpert.onrender.com)).
 
 ## Notes for forking to Code Editor
 A few steps need to be followed for the code to work:
