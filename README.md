@@ -1,5 +1,5 @@
 # ![Regression Expert Big Logo](./public/Images/RegressionExpert-small-logo.png)
-Welcome to Regression Expert! You may also access the website [here](https://regression-expert-3--PhilipXu.replit.app](https://regressionexpert.onrender.com).
+Welcome to Regression Expert! You may also access the website [here](https://regressionexpert.onrender.com).
 
 ## Notes for forking to Code Editor
 A few steps need to be followed for the code to work:
