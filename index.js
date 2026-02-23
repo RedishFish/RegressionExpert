@@ -1,6 +1,6 @@
 // Imports, setups
 import express from "express";
-import sqlite3 from "sqlite3";
+import Database from "better-sqlite3";
 const app = express();
 import ejs from "ejs";
 
@@ -50,7 +50,7 @@ app.get("/saved", (req, res) => {
 import bodyParser from "body-parser";
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-const db = new sqlite3.Database("./userDB.sql"); // the database
+const db = new Database("./userDB.sql"); // the database
 
 app.post("/getSC", (req, res) => {
   /*
@@ -59,11 +59,13 @@ app.post("/getSC", (req, res) => {
   element.
   */
   const user = req.body.user;
-  let sql = 'SELECT shortcuts FROM users WHERE username = "' + user + '"'; // retrieving
-  db.all(sql, [], (err, ans) => {
-    if (err) throw err;
-    res.render("home", { ok: "Good", sc: ans[0].shortcuts }); // embedding
-  });
+  let stmt = db.prepare("SELECT shortcuts FROM users WHERE username = ?");
+  let ans = stmt.all(user);
+  if (ans.length > 0) {
+    res.render("home", { ok: "Good", sc: ans[0].shortcuts });
+  } else {
+    res.render("home", { ok: "Bad", sc: "" });
+  }
 });
 
 app.post("/changeSC", (req, res) => {
@@ -77,15 +79,8 @@ app.post("/changeSC", (req, res) => {
   // Retrieve the user's selections, and combine into string
   let sc = plot + " " + del + " " + select;
   // Store string into db
-  let sql = db.prepare(
-    "UPDATE users SET shortcuts = '" +
-      sc +
-      "' WHERE username = '" +
-      user +
-      "';",
-  );
-  sql.run();
-  sql.finalize();
+  let stmt = db.prepare("UPDATE users SET shortcuts = ? WHERE username = ?");
+  stmt.run(sc, user);
 });
 
 app.post("/saved", (req, res) => {
@@ -96,15 +91,13 @@ app.post("/saved", (req, res) => {
   const user = req.body.username;
   let isOK = req.body.isOK;
   if (isOK != "OK") {
-    let sql = "SELECT * FROM " + user + ";";
-    db.all(sql, [], (err, ans) => {
-      if (err) throw err;
-      res.render("saved", { btns: ans, ok: "OK" });
-    });
+    let stmt = db.prepare("SELECT * FROM " + user + ";");
+    let ans = stmt.all();
+    res.render("saved", { btns: ans, ok: "OK" });
   }
 });
 
-//db.run("CREATE TABLE users (username TEXT, pwd TEXT, shortcuts TEXT)")
+//db.exec("CREATE TABLE users (username TEXT, pwd TEXT, shortcuts TEXT)")
 // The last statement creates the db. Only un-comment it when rebuilding the db.
 app.post("/newacc", (req, res) => {
   // This method creates new accounts and shows alerts
@@ -115,40 +108,31 @@ app.post("/newacc", (req, res) => {
       msg: "For technical reasons, that username is not available. ", // otherwise sql error...
     });
   } else {
-    let sql = 'SELECT username FROM users WHERE username = "' + user + '"';
-    db.all(sql, [], (err, ans) => {
-      if (err) {
-        throw err;
-      }
-      // if username does not exist, ans is null, so doing
-      // ans[0].username will give an error.
-      // if an error occured, this means username is not
-      // already in use.
+    let stmt = db.prepare("SELECT username FROM users WHERE username = ?");
+    let ans = stmt.all(user);
+    
+    if (ans.length > 0) {
+      res.render("newacc", { msg: "Username already exists!" });
+    } else {
       try {
-        if (ans[0].username == user) {
-          res.render("newacc", { msg: "Username already exists!" }); 
-        }
-      } catch {
-        db.serialize(() => {
-          let stmt = db.prepare(
-            'INSERT INTO users VALUES ("' +
-              user +
-              '", "' +
-              pwd +
-              '", "p d s");',
-          ); // insert new user into db
-          stmt.run();
-          stmt = db.prepare(
-            "CREATE TABLE " +
-              user +
-              " (name TEXT, points TEXT, regressions TEXT);",
-          );
-          stmt.run();
-          stmt.finalize();
-          res.redirect("success"); // redirect to success page
-        });
+        // Insert new user into db
+        let insertStmt = db.prepare(
+          "INSERT INTO users VALUES (?, ?, ?)"
+        );
+        insertStmt.run(user, pwd, "p d s");
+        
+        // Create table for user's graphs
+        db.exec(
+          "CREATE TABLE " +
+            user +
+            " (name TEXT, points TEXT, regressions TEXT);"
+        );
+        
+        res.redirect("success"); // redirect to success page
+      } catch (err) {
+        res.render("newacc", { msg: "Error creating account. Please try again." });
       }
-    });
+    }
   }
 });
 
@@ -156,23 +140,20 @@ app.post("/login", (req, res) => {
   // This method handles logins
   const user = req.body.user;
   const pwd = req.body.pwd;
-  let sql = 'SELECT pwd FROM users WHERE username = "' + user + '";';
-  db.all(sql, [], (err, ans) => {
-    // similarly as last method, if username does not exist, an error will occur
-    try {
-      if (ans[0].pwd == pwd) {
-        res.redirect("home"); // passwords match
-      } else {
-        res.render("login", { msg: "Invalid Password!" }); // passwords do not match
-      }
-    } catch {
-      res.render("login", { msg: "Invalid Username!" }); // error, so username does not exist
-    }
-  });
+  let stmt = db.prepare("SELECT pwd FROM users WHERE username = ?");
+  let ans = stmt.all(user);
+  
+  if (ans.length > 0 && ans[0].pwd == pwd) {
+    res.redirect("home"); // passwords match
+  } else if (ans.length > 0) {
+    res.render("login", { msg: "Invalid Password!" }); // passwords do not match
+  } else {
+    res.render("login", { msg: "Invalid Username!" }); // username does not exist
+  }
 });
 
 app.post("/graph-editor", (req, res) => {
-  // this method is serves the "Save" button.
+  // this method serves the "Save" button.
   const user = req.body.user;
   const points = req.body.points;
   const lines = req.body.lines;
@@ -182,32 +163,16 @@ app.post("/graph-editor", (req, res) => {
   let name = req.body.name;
   if (name == "") name = "Untitled Graph";
   if (points.length != 0) {
-    let sql = db.prepare(
-      "DELETE FROM " +
-        user +
-        " WHERE name='" +
-        origName +
-        "' AND points='" +
-        origPoints +
-        "';", // delete old attributes
+    let deleteStmt = db.prepare(
+      "DELETE FROM " + user + " WHERE name=? AND points=?;"
     );
-    sql.run();
-    sql = db.prepare(
-      "INSERT INTO " +
-        user +
-        ' VALUES ("' +
-        name +
-        '", "' +
-        points +
-        '", "' +
-        lines +
-        '");', // insert new attributes, thus saving
+    deleteStmt.run(origName, origPoints);
+    
+    let insertStmt = db.prepare(
+      "INSERT INTO " + user + " VALUES (?, ?, ?);"
     );
-    sql.run();
-    sql.finalize();
+    insertStmt.run(name, points, lines);
   }
-  //res.status(200).send();
-  //res.end();
 });
 
 app.post("/delete", (req, res) => {
@@ -216,17 +181,10 @@ app.post("/delete", (req, res) => {
   const points = req.body.delpts;
   const graphName = req.body.gname;
   console.log(points);
-  let sql = db.prepare(
-    "DELETE FROM " +
-      user +
-      " WHERE name='" +
-      graphName +
-      "' AND points='" +
-      points +
-      "';", // delete the row corresponding to the graph
+  let stmt = db.prepare(
+    "DELETE FROM " + user + " WHERE name=? AND points=?;"
   );
-  sql.run();
-  sql.finalize();
+  stmt.run(graphName, points);
   res.render("saved", { btns: [], ok: "Not OK" });
 });
 
@@ -237,23 +195,25 @@ app.post("/changePwd", (req, res) => {
   const newpwd = req.body["new-pwd"];
   const confirm = req.body["confirm-pwd"];
   const sc = req.body["shortcuts"];
-  let sql = 'SELECT pwd FROM users WHERE username = "' + user + '";'; // select old password
-  db.all(sql, [], (err, ans) => {
-    if (ans[0].pwd != oldpwd) {
-      res.render("settings", { msg: "Incorrect Password!" }); // check if passwords match
-    } else if (newpwd != confirm) {
-      res.render("settings", {
-        msg: "New password and confirmation do not match!",
-      });
-    } 
-    else {  
-      sql = db.prepare("DELETE FROM users WHERE username='" + user + "';"); // delete old username/password pair
-      sql.run();
-      sql = db.prepare(
-        'INSERT INTO users VALUES ("' + user + '", "' + newpwd + '", "'+sc+'");'); // insert new username/password pair
-      sql.run();
-      sql.finalize();
-      res.render("settings", { msg: "Password change successful." }); // alert the user
-    }
-  });
+  
+  let stmt = db.prepare("SELECT pwd FROM users WHERE username = ?");
+  let ans = stmt.all(user);
+  
+  if (ans.length === 0 || ans[0].pwd != oldpwd) {
+    res.render("settings", { msg: "Incorrect Password!" });
+  } else if (newpwd != confirm) {
+    res.render("settings", {
+      msg: "New password and confirmation do not match!",
+    });
+  } else {
+    let deleteStmt = db.prepare("DELETE FROM users WHERE username=?");
+    deleteStmt.run(user);
+    
+    let insertStmt = db.prepare(
+      "INSERT INTO users VALUES (?, ?, ?);"
+    );
+    insertStmt.run(user, newpwd, sc);
+    
+    res.render("settings", { msg: "Password change successful." });
+  }
 });

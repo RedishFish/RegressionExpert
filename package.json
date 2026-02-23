@@ -5,7 +5,7 @@
   "type": "module",
   "module": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +15,9 @@
     "body-parser": "^1.20.2",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
-    "node-fetch": "^3.3.2",
-    "sqlite3": "^5.1.7"
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
