@@ -59,8 +59,8 @@ app.post("/getSC", (req, res) => {
   element.
   */
   const user = req.body.user;
-  let sql = 'SELECT shortcuts FROM users WHERE username = "' + user + '"'; // retrieving
-  db.all(sql, [], (err, ans) => {
+  let sql = 'SELECT shortcuts FROM users WHERE username = ?'; // retrieving
+  db.all(sql, [user], (err, ans) => {
     if (err) throw err;
     res.render("home", { ok: "Good", sc: ans[0].shortcuts }); // embedding
   });
@@ -78,13 +78,9 @@ app.post("/changeSC", (req, res) => {
   let sc = plot + " " + del + " " + select;
   // Store string into db
   let sql = db.prepare(
-    "UPDATE users SET shortcuts = '" +
-      sc +
-      "' WHERE username = '" +
-      user +
-      "';",
+    "UPDATE users SET shortcuts = ? WHERE username = ?;"
   );
-  sql.run();
+  sql.run([sc, user]);
   sql.finalize();
 });
 
@@ -96,6 +92,12 @@ app.post("/saved", (req, res) => {
   const user = req.body.username;
   let isOK = req.body.isOK;
   if (isOK != "OK") {
+    // Note: Table names cannot be parameterized in SQL. Use allowlist validation.
+    const allowedTables = /^[a-zA-Z0-9_]+$/;
+    if (!allowedTables.test(user)) {
+      res.render("saved", { btns: [], ok: "Not OK" });
+      return;
+    }
     let sql = "SELECT * FROM " + user + ";";
     db.all(sql, [], (err, ans) => {
       if (err) throw err;
@@ -115,8 +117,14 @@ app.post("/newacc", (req, res) => {
       msg: "For technical reasons, that username is not available. ", // otherwise sql error...
     });
   } else {
-    let sql = 'SELECT username FROM users WHERE username = "' + user + '"';
-    db.all(sql, [], (err, ans) => {
+    // Validate table name with allowlist to prevent SQL injection on CREATE TABLE
+    const allowedTables = /^[a-zA-Z0-9_]+$/;
+    if (!allowedTables.test(user)) {
+      res.render("newacc", { msg: "Username can only contain letters, numbers, and underscores." });
+      return;
+    }
+    let sql = 'SELECT username FROM users WHERE username = ?';
+    db.all(sql, [user], (err, ans) => {
       if (err) {
         throw err;
       }
@@ -131,13 +139,9 @@ app.post("/newacc", (req, res) => {
       } catch {
         db.serialize(() => {
           let stmt = db.prepare(
-            'INSERT INTO users VALUES ("' +
-              user +
-              '", "' +
-              pwd +
-              '", "p d s");',
+            'INSERT INTO users VALUES (?, ?, "p d s");'
           ); // insert new user into db
-          stmt.run();
+          stmt.run([user, pwd]);
           stmt = db.prepare(
             "CREATE TABLE " +
               user +
@@ -156,8 +160,8 @@ app.post("/login", (req, res) => {
   // This method handles logins
   const user = req.body.user;
   const pwd = req.body.pwd;
-  let sql = 'SELECT pwd FROM users WHERE username = "' + user + '";';
-  db.all(sql, [], (err, ans) => {
+  let sql = 'SELECT pwd FROM users WHERE username = ?;';
+  db.all(sql, [user], (err, ans) => {
     // similarly as last method, if username does not exist, an error will occur
     try {
       if (ans[0].pwd == pwd) {
@@ -181,29 +185,24 @@ app.post("/graph-editor", (req, res) => {
   // origName and origPoints are the old attributes of the graph.
   let name = req.body.name;
   if (name == "") name = "Untitled Graph";
+  // Validate table name with allowlist to prevent SQL injection
+  const allowedTables = /^[a-zA-Z0-9_]+$/;
+  if (!allowedTables.test(user)) {
+    return;
+  }
   if (points.length != 0) {
     let sql = db.prepare(
       "DELETE FROM " +
         user +
-        " WHERE name='" +
-        origName +
-        "' AND points='" +
-        origPoints +
-        "';", // delete old attributes
+        " WHERE name = ? AND points = ?;" // delete old attributes
     );
-    sql.run();
+    sql.run([origName, origPoints]);
     sql = db.prepare(
       "INSERT INTO " +
         user +
-        ' VALUES ("' +
-        name +
-        '", "' +
-        points +
-        '", "' +
-        lines +
-        '");', // insert new attributes, thus saving
+        ' VALUES (?, ?, ?);' // insert new attributes, thus saving
     );
-    sql.run();
+    sql.run([name, points, lines]);
     sql.finalize();
   }
   //res.status(200).send();
@@ -216,16 +215,18 @@ app.post("/delete", (req, res) => {
   const points = req.body.delpts;
   const graphName = req.body.gname;
   console.log(points);
+  // Validate table name with allowlist to prevent SQL injection
+  const allowedTables = /^[a-zA-Z0-9_]+$/;
+  if (!allowedTables.test(user)) {
+    res.render("saved", { btns: [], ok: "Not OK" });
+    return;
+  }
   let sql = db.prepare(
     "DELETE FROM " +
       user +
-      " WHERE name='" +
-      graphName +
-      "' AND points='" +
-      points +
-      "';", // delete the row corresponding to the graph
+      " WHERE name = ? AND points = ?;" // delete the row corresponding to the graph
   );
-  sql.run();
+  sql.run([graphName, points]);
   sql.finalize();
   res.render("saved", { btns: [], ok: "Not OK" });
 });
@@ -237,8 +238,8 @@ app.post("/changePwd", (req, res) => {
   const newpwd = req.body["new-pwd"];
   const confirm = req.body["confirm-pwd"];
   const sc = req.body["shortcuts"];
-  let sql = 'SELECT pwd FROM users WHERE username = "' + user + '";'; // select old password
-  db.all(sql, [], (err, ans) => {
+  let sql = 'SELECT pwd FROM users WHERE username = ?;'; // select old password
+  db.all(sql, [user], (err, ans) => {
     if (ans[0].pwd != oldpwd) {
       res.render("settings", { msg: "Incorrect Password!" }); // check if passwords match
     } else if (newpwd != confirm) {
@@ -247,11 +248,11 @@ app.post("/changePwd", (req, res) => {
       });
     } 
     else {  
-      sql = db.prepare("DELETE FROM users WHERE username='" + user + "';"); // delete old username/password pair
-      sql.run();
+      sql = db.prepare("DELETE FROM users WHERE username = ?;"); // delete old username/password pair
+      sql.run([user]);
       sql = db.prepare(
-        'INSERT INTO users VALUES ("' + user + '", "' + newpwd + '", "'+sc+'");'); // insert new username/password pair
-      sql.run();
+        'INSERT INTO users VALUES (?, ?, ?);'); // insert new username/password pair
+      sql.run([user, newpwd, sc]);
       sql.finalize();
       res.render("settings", { msg: "Password change successful." }); // alert the user
     }
