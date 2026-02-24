@@ -3,10 +3,9 @@ Welcome to Regression Expert! You may also access the website [here](https://reg
 
 ## Notes for forking to Code Editor
 A few steps need to be followed for the code to work:
-- Change index.js import statements according to the comments
 - Have Node.js installed and connected to your code editor
-- Run the command `npm install express sqlite3 ejs` to install necessary libraries
-And you should be set!
+- Run the command `npm install` to install necessary libraries
+And you should be set! Run `npm run dev` to start an instance.
 
 ## About
 Regression Expert is dedicated for those who are experienced or new to regression. It is going to offer much of the same functionalities as other graphing/curve fitting softwares, but focuses on usability and a friendly user interface. It is still **work in progress** and may have bugs and incomplete functionalities at this point!
