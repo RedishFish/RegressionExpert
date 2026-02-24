@@ -1,0 +1,173 @@
+body {
+	background: linear-gradient(180deg, #f3f8ff 0%, #e7efff 100%);
+}
+
+.settings-page {
+	max-width: 980px;
+	margin: 0 auto;
+	padding: 0 16px 24px;
+}
+
+.small-logo {
+	display: inline-block;
+	height: 90px;
+	margin: 0;
+	padding: 0;
+}
+
+.small-logo img {
+	height: 100%;
+}
+
+.settings-panel {
+	margin-top: 12px;
+	border: 3px solid #6196c2;
+	border-radius: 14px;
+	background-color: rgba(255, 255, 255, 0.92);
+	box-shadow: 0 8px 20px rgba(57, 87, 124, 0.15);
+	padding: 8px 14px 14px;
+}
+
+.main-title {
+	color: #1d79c6;
+	font-weight: 700;
+	text-align: center;
+	margin: 8px 0;
+}
+
+hr {
+	display: block;
+	height: 1px;
+	border: 0;
+	border-top: 4px solid #6196c2;
+	margin: 6px 0;
+	padding: 0;
+}
+
+.alert {
+	min-height: 34px;
+}
+
+#alert {
+	text-align: center;
+	color: #1f4f87;
+	font-weight: 600;
+}
+
+.settings-actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+}
+
+.setting-option-btns {
+	display: inline-block;
+	min-width: 200px;
+	border: none;
+	border-radius: 10px;
+	color: #fff;
+	background-color: #7d91de;
+	font-size: 20px;
+	font-weight: 700;
+	padding: 10px 16px;
+	cursor: pointer;
+	transition: background-color 0.25s ease;
+}
+
+.setting-option-btns:hover {
+	background-color: #a3c3f7;
+}
+
+.settings-list {
+	border: 2px solid #6196c2;
+	border-radius: 10px;
+	margin-top: 8px;
+	background-color: #f8fbff;
+	min-height: 80px;
+}
+
+.settings-list form,
+.settings-list p,
+.settings-list input,
+.settings-list button {
+	background: transparent;
+}
+
+.settings-list p {
+    width: 15%;
+}
+
+.settings-list button {
+    color: #000;
+}
+
+.settings-list input {
+	border: 2px solid #9ab6d8;
+	border-radius: 8px;
+	width: 100%;
+	max-width: 320px;
+}
+
+.panel-text {
+	line-height: 1.65;
+	color: #24354b;
+	font-size: 20px;
+}
+
+.panel-text p {
+	font-size: 20px;
+	margin: 0;
+}
+
+.graph-list {
+	margin-top: 10px;
+}
+
+.graph-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
+.graph-name-wrap {
+	flex: 1;
+	min-width: 260px;
+}
+
+.graph-name {
+	font-size: 22px;
+	font-weight: 600;
+	color: #1f4f87;
+	margin: 0;
+}
+
+.graph-actions {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.graph-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-width: 130px;
+}
+
+.graph-btn img {
+	height: 20px;
+	width: 20px;
+	object-fit: contain;
+}
+
+.delete-btn {
+	background-color: #c74949;
+}
+
+.delete-btn:hover {
+	background-color: #e36a6a;
+}

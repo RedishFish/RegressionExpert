@@ -128,7 +128,8 @@ app.post("/newacc", (req, res) => {
             " (name TEXT, points TEXT, regressions TEXT);"
         );
         
-        res.redirect("success"); // redirect to success page
+        // Pass username to success page to set localStorage
+        res.render("success", { username: user });
       } catch (err) {
         res.render("newacc", { msg: "Error creating account. Please try again." });
       }

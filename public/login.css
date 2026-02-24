@@ -106,49 +106,83 @@
 
 /* END land page */
 
-/* newacc page */
+/* newacc and login pages */
 .alert {
   color: red;
-  position: absolute;
-  bottom: 500px;
 }
 
 h1 {
   font-size: 50px;
 }
 
-.newacc-main-space {
-  position: absolute;
-  left: 0px;
-  top: 100px;
-  display: flex;
+.newacc-home, .login-home {
+  left: 50%;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
-.acc-page-btn {
+.login-main-space, .newacc-main-space {
+  padding: 5px;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  max-width: 500px;
+  z-index: 10;
+  border: 2px solid #6196c2;
+}
+
+.login-page-btn, .acc-page-btn {
   border-radius: 10px;
-  height: 70px;
+  height: auto;
+  padding: 5px;
   width: 200px;
   color: white;
   border: none;
   background-color: #7d91de;
-  transition: all 1s;
-  margin-top: 5%;
+  transition: background-color 0.5s;
+  margin-top: 30px;
 }
 
-.acc-page-btn:hover {
-  background-color: #b2ccf5;
+.login-page-btn:hover, .acc-page-btn:hover {
+  background-color: #a3c3f7;
   filter: none;
-  width: 250px;
 }
 
-.newacc-home {
-  position: absolute;
-  top: 250px;
-}
-
-.acc-greet-message {
+.login-greet-message, .acc-greet-message {
   border-bottom: 5px solid #6196c2;
+  padding: 5px;
+  font-size: 40px;
 }
 
-/* END newacc page */
+/* Form styling for login and newacc pages */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 15px;
+  background: none;
+}
+
+form input {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  border: 2px solid #6196c2;
+  border-radius: 5px;
+  font-size: 18px;
+}
+
+form input:focus {
+  outline: none;
+  border-color: #1D79C6;
+  box-shadow: 0 0 5px rgba(29, 121, 198, 0.5);
+}
+
+/* END newacc and login pages */
 

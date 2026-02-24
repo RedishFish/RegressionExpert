@@ -2,22 +2,21 @@
 <html>
   <%- include('layouts/login-header'); -%>
   <body>
-    <h1 class="acc-greet-message">Log In</h1>
+    <h1 class="login-greet-message">Log In</h1>
     <div class="editor-img-wrapper">
       <img src="Images/land-page/example-editor.png" alt="Example editor page">
     </div>
-    <div class="newacc-main-space">
+    <div class="login-main-space">
       <form action="/login" method="post">
       <p>Username: </p>
       <input id="user" name="user">
       <p>Password: </p>
       <input id="pwd" name="pwd" type="password"></input>
-      <br>
-      <button onclick="getUser();" type="submit" class="acc-page-btn">Log In</button>
+      <button onclick="getUser();" type="submit" class="login-page-btn">Log In</button>
       </form>
+       <button class="newacc-home acc-page-btn" onclick="window.location.href='index';">Home Page</button>
+        <p class='alert'><%- msg -%></p>
     </div>
-    <button class="newacc-home acc-page-btn" onclick="window.location.href='index';">Home Page</button>
-    <p class='alert'><%- msg -%></p>
     <script>
       function getUser(){
         let username = document.getElementById('user');

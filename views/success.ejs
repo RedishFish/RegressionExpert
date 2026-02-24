@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html>
-  <%- include('layouts/login-header'); -%>
+  <head>
+    <title>Account Created</title>
+  </head>
   <body>
-    <h1>Account creation successful.</h1>
-    <button onclick="window.location.href='index';">Home Page</button>
+    <h1>Account Created Successfully!</h1>
+    <script>
+      localStorage.setItem("username", "<%= username %>");
+      setTimeout(() => {
+        window.location.href = "/home";
+      }, 1500);
+    </script>
   </body>
 </html>

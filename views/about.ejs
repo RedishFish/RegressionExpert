@@ -5,23 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>RegressionExpert - About</title>
     <link rel="stylesheet" href="app-pages.css" />
+    <link rel="stylesheet" href="settings.css" />
     <link rel="icon" type="image/ico" href="/regression-expert.ico" />
   </head>
   <body>
-    <a href="/home" class="small-logo">
-      <img src="Images/RegressionExpert-small-logo.png" alt="RegressionExpert"
-    /></a>
-    <h1 class="main-title">About</h1>
-    <p>
-      RegressionExpert is a software to generate and store regressions and data
-      in a visual and convienient way. It was inspired by other regression
-      softwares online, which were either difficult or inconvinient to use.
-      <br />
-      RegressionExpert is created by Luca Tu and Philip Xu, under the
-      supervision of their instructor, Stacie Torres. <br />
-      To contact the developers for bugs and/or issues, visit the
-      <a href="https://github.com/RedishFish/RegressionExpert">GitHub Page</a>.
-    </p>
-    <button onclick="window.location.href='home';">Home Page</button>
+    <div class="settings-page">
+      <a href="/home" class="small-logo">
+        <img
+          src="Images/RegressionExpert-small-logo.png"
+          alt="RegressionExpert"
+      /></a>
+      <section class="settings-panel">
+        <h1 class="main-title">About</h1>
+        <hr />
+        <div class="panel-text">
+          <p>
+            RegressionExpert is a software to generate and store regressions and
+            data in a visual and convienient way. It was inspired by other
+            regression softwares online, which were either difficult or
+            inconvinient to use.
+            <br />
+            RegressionExpert is created by Luca Tu and Philip Xu, under the
+            supervision of their instructor, Stacie Torres. <br />
+            To contact the developers for bugs and/or issues, visit the
+            <a href="https://github.com/RedishFish/RegressionExpert"
+              >GitHub Page</a
+            >.
+          </p>
+        </div>
+        <div class="settings-actions">
+          <button
+            class="setting-option-btns"
+            onclick="window.location.href = 'home'"
+          >
+            Home Page
+          </button>
+        </div>
+      </section>
+    </div>
   </body>
 </html>

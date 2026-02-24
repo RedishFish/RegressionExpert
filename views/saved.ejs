@@ -7,45 +7,11 @@
     <link rel="icon" type="image/x-icon" href="delete.png">
     
     <link rel="stylesheet" href="app-pages.css" />
+    <link rel="stylesheet" href="settings.css" />
     <link rel="icon" type="image/ico" href="/regression-expert.ico" />
-    <style>
-      button {
-        font-size: 20px;
-      }
-      
-      .logout-btn {
-        position: absolute;
-        top: 0px;
-        margin-left: 85%;
-      }
-
-      .main-title {
-        font-size: 50px;
-        text-align: center;
-      }
-
-      p:not(.hide), button {
-        display: inline-block;
-        position: relative;
-        left: 100px;
-      }
-      button:not(.logout-btn) {
-        float: right;
-      }
-      .delete-btn {
-        margin-right: 15%;
-      }
-      hr {
-          display: block;
-          height: 1px;
-          border: 0;
-          border-top: 5px solid seagreen;
-          margin: 1em 0;
-          padding: 0;
-      }
-    </style>
   </head>
   <body>
+    <div class="settings-page">
       <a href="/home" class="small-logo">
         <img src="Images/RegressionExpert-small-logo.png" alt="RegressionExpert"
       /></a>
@@ -56,21 +22,32 @@
         <button type="button" onclick="closePopup()" class="no-btn">No</button>
         <button type="button" onclick="logout()" class="yes-btn">Yes</button>
       </div>
+      <section class="settings-panel">
       <h1 class='main-title'>Load a previously saved graph</h1>
+      <hr />
       <form id='user' action='/saved' method='post'>
         <input hidden id='username' name='username'>
         <input hidden id='isOK' name='isOK' value="<%= ok %>">
       </form>
       <div class="graph-list">
         <% for(let i = 0; i < btns.length; i++){ %>
-          <p id="1<%= btns[i].points %>"><%= btns[i].name %></p>
-          <p hidden id='2<%= btns[i].points %>' class="hide"><%= btns[i].regressions %></p>
-          
-          <button id="3<%= btns[i].points %>" class="delete-btn" onclick="delGraph(this.id)">Delete<img src="delete-icon.png" height='41' width='41'></button>
-          <button id="<%= btns[i].points %>" class="edit-btn" onclick="getGraph(this.id)">Edit<img src="edit-icon.png"></button>
+          <div class="graph-row">
+            <div class="graph-name-wrap">
+              <p id="1<%= btns[i].points %>" class="graph-name"><%= btns[i].name %></p>
+              <p hidden id='2<%= btns[i].points %>' class="hide"><%= btns[i].regressions %></p>
+            </div>
+            <div class="graph-actions">
+              <button id="<%= btns[i].points %>" class="setting-option-btns graph-btn" onclick="getGraph(this.id)">Edit<img src="edit-icon.png"></button>
+              <button id="3<%= btns[i].points %>" class="setting-option-btns graph-btn delete-btn" onclick="delGraph(this.id)">Delete<img src="delete-icon.png" height='41' width='41'></button>
+            </div>
+          </div>
           <hr>
         <% }%>
       </div>
+      <div class="settings-actions">
+        <button class="setting-option-btns" onclick="window.location.href='home';">Home Page</button>
+      </div>
+      </section>
       <div hidden>
         <form id='del' action='/delete' method='post'>
           <input id='deluser' name='deluser'>
@@ -78,6 +55,7 @@
           <input id='gname' name='gname'>
         </form>
       </div>
+    </div>
     <script>
 
       let popup = document.getElementById('popup')

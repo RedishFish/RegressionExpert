@@ -5,84 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Settings</title>
     <link rel="stylesheet" href="app-pages.css" />
+    <link rel="stylesheet" href="settings.css" />
     <link rel="icon" type="image/ico" href="/regression-expert.ico" />
-    <style>
-      .logout-btn {
-          position: relative;
-          bottom: 160px;
-      }
-      hr {
-          display: block;
-          height: 1px;
-          border: 0;
-          border-top: 5px solid seagreen;
-          margin: 1em 0;
-          padding: 0;
-      }
-      .setting-option-btns {
-        display: inline-block;
-        margin-right: 20px;
-      }
-      .settings-list {
-        border-style: solid;
-        border-width: 5px;
-        border-color: darkgray;
-      }
-
-      
-    </style>
   </head>
   <body>
+    <div class="settings-page">
       <a href="/home" class="small-logo">
-        <img src="Images/RegressionExpert-small-logo.png" alt="RegressionExpert"
+        <img
+          src="Images/RegressionExpert-small-logo.png"
+          alt="RegressionExpert"
       /></a>
-    
-    <h1 class='main-title'>Settings</h1>
-    <hr>
-    <div class='alert'>
-      <p id='alert'><%= msg %></p>
-    </div>
-    <button class="setting-option-btns" onclick="shortcuts()">Keyboard Shortcuts</button>
-    
-    <button class="setting-option-btns" onclick="changePwd()">Change Password</button>
-    <button class="setting-option-btns" onclick="window.location.href='home';">Home Page</button>
-    <hr>
-    <br>
-    <div hidden class='settings-list'></div>
-    <div hidden>
-      <form id="changeSC" action="/changeSC" method='post'>
-        <input id="plot" name="plot">
-        <input id="delete" name="delete">
-        <input id="select" name="select">
-        <input id="user" name="user">
-      </form>
+      <section class="settings-panel">
+        <h1 class="main-title">Settings</h1>
+        <hr />
+        <div class="alert">
+          <p id="alert"><%= msg %></p>
+        </div>
+        <div class="settings-actions">
+          <button class="setting-option-btns" onclick="shortcuts()">
+            Keyboard Shortcuts
+          </button>
+          <button class="setting-option-btns" onclick="changePwd()">
+            Change Password
+          </button>
+          <button
+            class="setting-option-btns"
+            onclick="window.location.href = 'home'"
+          >
+            Home Page
+          </button>
+        </div>
+        <hr />
+        <div hidden class="settings-list"></div>
+      </section>
+      <div hidden>
+        <form id="changeSC" action="/changeSC" method="post">
+          <input id="plot" name="plot" />
+          <input id="delete" name="delete" />
+          <input id="select" name="select" />
+          <input id="user" name="user" />
+        </form>
+      </div>
     </div>
     <script>
       document.getElementById("user").value = localStorage.getItem("username");
-      let popup = document.getElementById('popup');
-      let sclist = localStorage.getItem("shortcuts").split(' ');
+      let popup = document.getElementById("popup");
+      let sclist = localStorage.getItem("shortcuts").split(" ");
       document.getElementById("plot").value = sclist[0];
       document.getElementById("delete").value = sclist[1];
       document.getElementById("select").value = sclist[2];
-      
-      function openPopup(){
-        popup.classList.add('open-popup')
+
+      function openPopup() {
+        popup.classList.add("open-popup");
       }
 
-      function closePopup(){
-        popup.classList.remove('open-popup')
+      function closePopup() {
+        popup.classList.remove("open-popup");
       }
 
-      function logout(){
+      function logout() {
         window.location.href = "index";
         localStorage.removeItem("username");
       }
 
-      function shortcuts(){
-        document.getElementById("alert").innerText = "Choose an option to get started: ";
+      function shortcuts() {
+        document.getElementById("alert").innerText =
+          "Choose an option to get started: ";
         let frame = document.getElementsByClassName("settings-list")[0];
         frame.removeAttribute("hidden");
-        while(frame.hasChildNodes()){
+        while (frame.hasChildNodes()) {
           frame.removeChild(frame.firstChild);
         }
         let pEl = document.createElement("p");
@@ -91,10 +82,11 @@
         pEl.style.display = "inline-block";
         let buttonEl = document.createElement("button");
         buttonEl.innerText = sclist[0];
+        buttonEl.className = "setting-option-btns";
         buttonEl.style.display = "inline-block";
         buttonEl.style["margin-left"] = "100px";
         buttonEl.id = "p";
-        buttonEl.setAttribute('onclick', 'changeSC(this.id)');
+        buttonEl.setAttribute("onclick", "changeSC(this.id)");
         frame.appendChild(buttonEl);
         let hrEl = document.createElement("hr");
         frame.appendChild(hrEl);
@@ -104,10 +96,11 @@
         pEl.style.display = "inline-block";
         buttonEl = document.createElement("button");
         buttonEl.innerText = sclist[1];
+        buttonEl.className = "setting-option-btns";
         buttonEl.style.display = "inline-block";
         buttonEl.style["margin-left"] = "100px";
         buttonEl.id = "d";
-        buttonEl.setAttribute('onclick', 'changeSC(this.id)');
+        buttonEl.setAttribute("onclick", "changeSC(this.id)");
         frame.appendChild(buttonEl);
         hrEl = document.createElement("hr");
         frame.appendChild(hrEl);
@@ -117,76 +110,81 @@
         pEl.style.display = "inline-block";
         buttonEl = document.createElement("button");
         buttonEl.innerText = sclist[2];
+        buttonEl.className = "setting-option-btns";
         buttonEl.style.display = "inline-block";
         buttonEl.style["margin-left"] = "100px";
         buttonEl.id = "s";
-        buttonEl.setAttribute('onclick', 'changeSC(this.id)');
+        buttonEl.setAttribute("onclick", "changeSC(this.id)");
         frame.appendChild(buttonEl);
         hrEl = document.createElement("hr");
         frame.appendChild(hrEl);
       }
 
-      function changeSC(id){
+      function changeSC(id) {
         let note = document.getElementById("alert");
-        note.innerText = "Please press a key on your keyboard to set it as the shortcut."
-        if(id == 'p') document.addEventListener("keydown", plotKey);
-        if(id == 'd') document.addEventListener("keydown", deleteKey);
-        if(id == 's') document.addEventListener("keydown", selectKey);
+        note.innerText =
+          "Please press a key on your keyboard to set it as the shortcut.";
+        if (id == "p") document.addEventListener("keydown", plotKey);
+        if (id == "d") document.addEventListener("keydown", deleteKey);
+        if (id == "s") document.addEventListener("keydown", selectKey);
       }
 
-      function plotKey(e){
+      function plotKey(e) {
         sclist[0] = e.key;
         document.removeEventListener("keydown", plotKey);
-        if(e.key == "'" || e.key == " " || e.key == "Enter"){
-          document.getElementById("alert").innerText = "Due to technical constraints, that key may not be set as a shortcut. ";
-        }
-        else {
-          document.getElementById("alert").innerText = "Successfully set "+e.key+" as shortcut for plot.";
+        if (e.key == "'" || e.key == " " || e.key == "Enter") {
+          document.getElementById("alert").innerText =
+            "Due to technical constraints, that key may not be set as a shortcut. ";
+        } else {
+          document.getElementById("alert").innerText =
+            "Successfully set " + e.key + " as shortcut for plot.";
           document.getElementById("plot").value = e.key;
           document.getElementById("p").innerHTML = e.key;
-          let newSC = e.key+" "+sclist[1]+" "+sclist[2];
+          let newSC = e.key + " " + sclist[1] + " " + sclist[2];
           localStorage.setItem("shortcuts", newSC);
           document.getElementById("changeSC").submit();
         }
       }
 
-      function deleteKey(e){
+      function deleteKey(e) {
         sclist[1] = e.key;
         document.removeEventListener("keydown", deleteKey);
-        if(e.key == "'" || e.key == " " || e.key == "Enter"){
-          document.getElementById("alert").innerText = "Due to technical constraints, that key may not be set as a shortcut. ";
-        }
-        else {
-          document.getElementById("alert").innerText = "Successfully set "+e.key+" as shortcut for delete.";
+        if (e.key == "'" || e.key == " " || e.key == "Enter") {
+          document.getElementById("alert").innerText =
+            "Due to technical constraints, that key may not be set as a shortcut. ";
+        } else {
+          document.getElementById("alert").innerText =
+            "Successfully set " + e.key + " as shortcut for delete.";
           document.getElementById("delete").value = e.key;
           document.getElementById("d").innerHTML = e.key;
-          let newSC = sclist[0]+" "+e.key+" "+sclist[2];
+          let newSC = sclist[0] + " " + e.key + " " + sclist[2];
           localStorage.setItem("shortcuts", newSC);
           document.getElementById("changeSC").submit();
         }
       }
 
-      function selectKey(e){
+      function selectKey(e) {
         sclist[2] = e.key;
         document.removeEventListener("keydown", selectKey);
-        if(e.key == "'" || e.key == " " || e.key == "Enter"){
-          document.getElementById("alert").innerText = "Due to technical constraints, that key may not be set as a shortcut. ";
-        }
-        else {
-          document.getElementById("alert").innerText = "Successfully set "+e.key+" as shortcut for select.";
+        if (e.key == "'" || e.key == " " || e.key == "Enter") {
+          document.getElementById("alert").innerText =
+            "Due to technical constraints, that key may not be set as a shortcut. ";
+        } else {
+          document.getElementById("alert").innerText =
+            "Successfully set " + e.key + " as shortcut for select.";
           document.getElementById("select").value = e.key;
           document.getElementById("s").innerHTML = e.key;
-          let newSC = sclist[0]+" "+sclist[1]+" "+e.key;
+          let newSC = sclist[0] + " " + sclist[1] + " " + e.key;
           localStorage.setItem("shortcuts", newSC);
           document.getElementById("changeSC").submit();
         }
       }
-      
-      function changePwd(){
+
+      function changePwd() {
         document.getElementById("alert").innerText = "Change Password";
         let frame = document.getElementsByClassName("settings-list")[0];
         frame.removeAttribute("hidden");
-        while(frame.hasChildNodes()){
+        while (frame.hasChildNodes()) {
           frame.removeChild(frame.firstChild);
         }
         let box = document.createElement("form");
@@ -216,6 +214,7 @@
         let buttonEl = document.createElement("button");
         buttonEl.innerText = "Change";
         buttonEl.type = "submit";
+        buttonEl.className = "setting-option-btns";
         box.appendChild(buttonEl);
         inputEl = document.createElement("input");
         inputEl.id = "username";
