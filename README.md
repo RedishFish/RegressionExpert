@@ -4,7 +4,7 @@ Welcome to Regression Expert! You may also access the website [here](https://reg
 ## Notes for forking to Code Editor
 A few steps need to be followed for the code to work:
 - Have Node.js installed and connected to your code editor
-- Run the command `npm install` to install necessary libraries
+- Run the command `npm install` to install necessary libraries  
 And you should be set! Run `npm run dev` to start an instance.
 
 ## About
