@@ -48,9 +48,27 @@ app.get("/saved", (req, res) => {
 });
 
 import bodyParser from "body-parser";
+import fs from "node:fs";
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-const db = new Database("./userDB.sql"); // the database
+
+const DB_PATH = "./userDB.sql";
+const dbExisted = fs.existsSync(DB_PATH);
+const db = new Database(DB_PATH); // creates file if missing
+
+if (!dbExisted) {
+  console.log("Database not found. Creating a new database...");
+}
+
+// Always ensure required tables exist
+db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    username TEXT PRIMARY KEY,
+    pwd TEXT NOT NULL,
+    shortcuts TEXT
+  );
+`);
 
 app.post("/getSC", (req, res) => {
   /*
